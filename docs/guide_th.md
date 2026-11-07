@@ -128,6 +128,7 @@ tests/          unit tests ของอัลกอริทึม
 config.yaml     การตั้งค่าทั้งหมด
 pyproject.toml  แพ็กเกจและ dependencies
 Makefile        ทางลัดของทุกขั้น (make setup, make demo, make all, make test)
+scripts/        build_hf_dataset.py (dataset บน Hugging Face: make hf)
 docs/           ตัวอย่างผลลัพธ์จากข้อมูลจำลอง (ภาพ, paper, explorer), คู่มือนี้, data_sources.md
 demo/, work/    สร้างขึ้นตอนรัน ไม่ถูกเก็บใน git (ดู .gitignore)
 ```

@@ -1,7 +1,7 @@
 PY ?= .venv/bin/python
 WS ?= work
 
-.PHONY: setup demo synth init status build analyze figures explorer paper all smoke docs test clean
+.PHONY: setup demo synth init status build analyze figures explorer paper all smoke docs hf test clean
 
 setup:          ## create venv and install the package (needs uv)
 	uv venv .venv --python 3.12
@@ -44,6 +44,12 @@ smoke:          ## synthetic build + analyze in ci-demo/ (what CI runs)
 docs: demo      ## refresh the synthetic showcase in docs/ from demo/
 	cp demo/explorer/index.html docs/explorer.html
 	cp demo/paper/paper.pdf docs/paper_demo.pdf
+
+hf:             ## synthetic dataset for Hugging Face -> dist/hf (upload: hf upload thanatchon36/tbg-kit dist/hf . --repo-type dataset)
+	$(PY) -m tbg synth
+	$(PY) -m tbg --workspace demo build
+	$(PY) -m tbg --workspace demo analyze
+	$(PY) scripts/build_hf_dataset.py --src demo --out dist/hf
 
 test:
 	$(PY) -m pytest -q

@@ -7,12 +7,15 @@
 <a href="docs/paper_demo.pdf"><img src="https://img.shields.io/badge/paper-PDF-f5c26b?style=flat-square&labelColor=0d1224" alt="Paper PDF"></a>
 <a href="docs/data_sources.md"><img src="https://img.shields.io/badge/data-synthetic-b0560f?style=flat-square&labelColor=0d1224" alt="Data: synthetic"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-ffe8a3?style=flat-square&labelColor=0d1224" alt="License MIT"></a>
+<a href="https://zenodo.org/badge/latestdoi/1449364095"><img src="https://zenodo.org/badge/1449364095.svg" alt="DOI"></a>
+<a href="https://huggingface.co/datasets/thanatchon36/tbg-kit"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20dataset-tbg--kit-f5c26b?style=flat-square&labelColor=0d1224" alt="Hugging Face dataset"></a>
 </p>
 
 <p align="center">
 🕸️ <b><a href="https://thanatchon36.github.io/tbg-kit/explorer.html">Explore the network online</a></b> ·
 📄 <b><a href="docs/paper_demo.pdf">Paper (demo PDF)</a></b> ·
 🗂️ <b><a href="docs/data_sources.md">Data sources</a></b> ·
+🤗 <b><a href="https://huggingface.co/datasets/thanatchon36/tbg-kit">Dataset</a></b> ·
 🇹🇭 <b><a href="docs/guide_th.md">คู่มือภาษาไทย</a></b> ·
 🧭 <b><a href="prompts/00_master_research_prompt.md">Master prompt</a></b>
 </p>
@@ -60,6 +63,7 @@ figure QA), `work/review/` (queues for manual checks), `work/figures/`, `work/ex
 | `all` | `build` → `analyze` → `figures` → `explorer` → `paper` |
 | `smoke` | Synthetic `build` + `analyze` in `ci-demo/` (what CI runs) |
 | `docs` | Refresh the synthetic showcase in `docs/` from a fresh `demo` |
+| `hf` | Synthetic dataset for Hugging Face → `dist/hf/` |
 
 Collection and extraction take arguments, so they are run directly:
 `python -m tbg collect {set-universe,set-shareholders,documents,gleif}` and
@@ -96,6 +100,8 @@ number in it.
 
 - Interactive explorer (synthetic): [online](https://thanatchon36.github.io/tbg-kit/explorer.html) ·
   [`docs/explorer.html`](docs/explorer.html)
+- Dataset on Hugging Face: [`thanatchon36/tbg-kit`](https://huggingface.co/datasets/thanatchon36/tbg-kit), one full
+  synthetic run: raw inputs, the resolved ownership network, ultimate owners, groups and bank–group links (`make hf`)
 - Research workflow with Claude in 8 phases, from scoping to pre-submission checks:
   [`prompts/00_master_research_prompt.md`](prompts/00_master_research_prompt.md)
 
@@ -123,6 +129,7 @@ seeds/business_groups.yaml  labels for known groups (labels only; membership com
 paper/                      paper.tex, references.bib
 templates/explorer.html     explorer template
 scripts/make_banner.py      README banner from the galaxy map
+scripts/build_hf_dataset.py Hugging Face dataset from the synthetic workspace
 docs/                       synthetic showcase (images, explorer, paper), data sources, Thai guide, GitHub Pages
 tests/                      ownership algorithms
 ```
@@ -147,5 +154,6 @@ individual-level data beyond what is needed (this is not legal advice). Read eac
 collecting data.
 
 ## Citation
-See [`CITATION.cff`](CITATION.cff) (GitHub's "Cite this repository" button) and [`CHANGELOG.md`](CHANGELOG.md).
+See [`CITATION.cff`](CITATION.cff) (GitHub's "Cite this repository" button); each release is archived on
+Zenodo (DOI badge above). Changes: [`CHANGELOG.md`](CHANGELOG.md).
 License: MIT.

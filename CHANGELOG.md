@@ -27,3 +27,6 @@ All notable changes to this project are documented here. The format follows
   a `Makefile` with one target per pipeline step, and CI (`ci.yml`) running the tests and a synthetic smoke test.
 - Documentation: README banner (`docs/assets/banner.png`, `scripts/make_banner.py`), the source list
   `docs/data_sources.md`, the Thai step-by-step guide `docs/guide_th.md` and the explorer on GitHub Pages.
+- Dataset on Hugging Face, [`thanatchon36/tbg-kit`](https://huggingface.co/datasets/thanatchon36/tbg-kit): one full
+  synthetic run (raw inputs, resolved network, ultimate owners, groups, bank–group links), built by `make hf`
+  (`scripts/build_hf_dataset.py`, which refuses any non-synthetic workspace).

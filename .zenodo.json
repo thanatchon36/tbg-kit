@@ -22,6 +22,12 @@
       "relation": "isDocumentedBy",
       "resource_type": "other",
       "scheme": "url"
+    },
+    {
+      "identifier": "https://huggingface.co/datasets/thanatchon36/tbg-kit",
+      "relation": "isSupplementedBy",
+      "resource_type": "dataset",
+      "scheme": "url"
     }
   ]
 }
