@@ -357,7 +357,7 @@ related-party transactions or market concentration.
 \section{Reproducing the results}
 \begin{small}
 \begin{verbatim}
-pip install -r requirements.txt
+pip install -e .                        # or: make setup
 python -m tbg init                      # create folders and blank input files
 python -m tbg collect set-universe      # or place the SET list in data/raw/universe/
 python -m tbg extract pages --kind subsidiaries

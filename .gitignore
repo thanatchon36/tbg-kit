@@ -33,3 +33,5 @@ paper/figures/
 Thumbs.db
 .idea/
 .vscode/
+dist/
+*:Zone.Identifier

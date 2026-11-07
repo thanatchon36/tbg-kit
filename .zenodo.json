@@ -1,0 +1,27 @@
+{
+  "title": "tbg-kit",
+  "upload_type": "software",
+  "description": "Open, reproducible pipeline that maps the ownership and control network of Thailand's business groups from public disclosures (SET shareholder registers, Form 56-1 One Reports, DBD BOJ.5 shareholder lists, bank Pillar 3 reports and GLEIF): Claude-assisted table extraction with review queues, Thai and English entity resolution, ultimate ownership with cash-flow and weakest-link control rights, pyramids and control–cash-flow wedges, the link between bank groups and business groups, publication-ready figures, an interactive explorer and an arXiv-style paper whose numbers are filled in automatically. Companion software to the working paper \"Mapping Thailand's Business Groups: Ownership, Control, and the Finance-Business Nexus\".",
+  "creators": [
+    {
+      "name": "Chongmankhong, Thanatchon"
+    }
+  ],
+  "license": "mit",
+  "keywords": [
+    "business groups",
+    "ultimate ownership",
+    "pyramids",
+    "interlocking directorates",
+    "financial conglomerates",
+    "Thailand"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://thanatchon36.github.io/tbg-kit/",
+      "relation": "isDocumentedBy",
+      "resource_type": "other",
+      "scheme": "url"
+    }
+  ]
+}

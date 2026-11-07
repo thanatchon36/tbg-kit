@@ -1,171 +1,151 @@
-# Thai Business Groups (tbg)
+<p align="center"><a href="https://thanatchon36.github.io/tbg-kit/explorer.html"><img src="docs/assets/banner.png" alt="tbg-kit: ownership network of Thai business groups (synthetic demonstration)" width="100%"></a></p>
 
-An open, reproducible pipeline that maps the ownership and control network of Thailand's business groups from public disclosures: SET shareholder registers, Form 56-1 One Reports, DBD shareholder lists (BOJ.5), bank Pillar 3 reports and GLEIF. It traces every subsidiary to its ultimate owner, measures pyramids and the gap between control and cash-flow rights, links bank groups to business groups, and produces publication-ready figures, an interactive explorer and an arXiv-style paper whose numbers are filled in automatically.
+<p align="center">
+<a href="https://github.com/thanatchon36/tbg-kit/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/thanatchon36/tbg-kit/ci.yml?style=flat-square&label=CI&labelColor=0d1224&color=f5c26b" alt="CI"></a>
+<a href="pyproject.toml"><img src="https://img.shields.io/badge/python-3.12-f5c26b?style=flat-square&labelColor=0d1224" alt="Python 3.12"></a>
+<a href="https://thanatchon36.github.io/tbg-kit/explorer.html"><img src="https://img.shields.io/badge/explorer-open%20online-f5c26b?style=flat-square&labelColor=0d1224" alt="Explorer: open online"></a>
+<a href="docs/paper_demo.pdf"><img src="https://img.shields.io/badge/paper-PDF-f5c26b?style=flat-square&labelColor=0d1224" alt="Paper PDF"></a>
+<a href="docs/data_sources.md"><img src="https://img.shields.io/badge/data-synthetic-b0560f?style=flat-square&labelColor=0d1224" alt="Data: synthetic"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-ffe8a3?style=flat-square&labelColor=0d1224" alt="License MIT"></a>
+</p>
 
-![Ownership network of business groups, synthetic demonstration](docs/images/galaxy_demo.png)
+<p align="center">
+🕸️ <b><a href="https://thanatchon36.github.io/tbg-kit/explorer.html">Explore the network online</a></b> ·
+📄 <b><a href="docs/paper_demo.pdf">Paper (demo PDF)</a></b> ·
+🗂️ <b><a href="docs/data_sources.md">Data sources</a></b> ·
+🇹🇭 <b><a href="docs/guide_th.md">คู่มือภาษาไทย</a></b> ·
+🧭 <b><a href="prompts/00_master_research_prompt.md">Master prompt</a></b>
+</p>
 
-*Everything in `docs/` is built from synthetic data: every company, person and number there is fictional.*
-
-## Features
-
-- **Collection and extraction.** Downloaders for public sources and LLM-assisted table extraction from PDF reports (Claude API, with batch mode), with review queues for every uncertain step.
-- **Entity resolution.** Thai and English names, repair of Thai PDF glyph artefacts, legal forms and personal titles, conservative fuzzy matching.
-- **Ultimate ownership.** Cash-flow rights as M(I−M)⁻¹ and block-wise weakest-link control rights (La Porta et al. 1999; Claessens et al. 2000), with cross-holdings and cycles, family aggregation, and Thai NVDR, custodian and fund accounts excluded from control.
-- **Finance–business nexus.** Ownership, shared directors and fund holdings between bank groups and business groups.
-- **Outputs.** Poster-size network maps, group control trees, charts checked automatically for overlapping text, a self-contained HTML explorer ([docs/explorer.html](docs/explorer.html)) and a LaTeX paper ([docs/paper_demo.pdf](docs/paper_demo.pdf)) compiled with pdfLaTeX, with an arXiv-ready bundle.
+**Who controls Thailand's business groups, through how many layers, and how are they tied to the banks?** An open,
+reproducible pipeline that maps the ownership and control network of Thai business groups from public disclosures:
+SET shareholder registers, Form 56-1 One Reports, DBD shareholder lists (BOJ.5), bank Pillar 3 reports and GLEIF. It
+traces every subsidiary to its ultimate owner, measures pyramids and the gap between control and cash-flow rights,
+links bank groups to business groups, and produces publication-ready figures, an interactive explorer and an
+arXiv-style paper whose numbers are filled in automatically.
 
 ![Control tree of one group, synthetic demonstration](docs/images/tree_demo.png)
 
-## Quick start
+> **Synthetic data notice.** This repository holds code and synthetic examples only. Every company, person and
+> number in `docs/` and `demo/` is fictional and says nothing about real Thai firms. Real data go to `work/`, which
+> is git-ignored: shareholder and director lists contain personal data protected by Thailand's Personal Data
+> Protection Act (PDPA). `docs/data_sources.md` is the list of real sources; collect them and run `make all`.
+
+## Install and quickstart
 
 ```bash
-pip install -r requirements.txt
-python -m pytest -q        # unit tests of the ownership algorithms
-python -m tbg demo         # synthetic end-to-end run: demo/figures, demo/explorer, demo/paper/paper.pdf
-python -m tbg init         # then collect real data into work/ (step-by-step guide below, in Thai)
+make setup      # uv venv + dependencies (Python 3.12)
+make test       # unit tests of the ownership algorithms
+make demo       # synthetic end-to-end run -> demo/figures, demo/explorer, demo/paper/paper.pdf  (about 5 minutes)
+make init       # then collect real data into work/ (docs/data_sources.md, docs/guide_th.md)
 ```
 
-Compiling the paper needs LaTeX (TeX Live or MiKTeX). Table extraction needs the `ANTHROPIC_API_KEY` environment variable.
+Without `make` or `uv`: `pip install -e ".[dev]"`, then `python -m tbg <command>` (or the `tbg` script). Compiling
+the paper needs LaTeX (TeX Live or MiKTeX). Table extraction needs the `ANTHROPIC_API_KEY` environment variable.
+
+Outputs: `work/data/processed/` (entities, holdings, links), `work/results/` (ultimate owners, groups, metrics,
+figure QA), `work/review/` (queues for manual checks), `work/figures/`, `work/explorer/index.html`
+(self-contained) and `work/paper/paper.pdf` with `work/paper/arxiv_submission.zip`.
+
+| Target | Purpose |
+|---|---|
+| `demo` | Synthetic end-to-end run into `demo/`. Never a substitute for real data |
+| `init` | Create `work/` with folders and blank CSV templates |
+| `status` | Coverage report and review queues |
+| `build` | Merge all sources, resolve entity names, write `data/processed/` |
+| `analyze` | Ultimate ownership, business groups, pyramids, finance–business nexus |
+| `figures` | Poster network map, group control trees, paper figures with text-overlap QA |
+| `explorer` | Self-contained interactive explorer → `work/explorer/index.html` |
+| `paper` | LaTeX tables and macros, compile `work/paper/paper.pdf` and the arXiv bundle |
+| `all` | `build` → `analyze` → `figures` → `explorer` → `paper` |
+| `smoke` | Synthetic `build` + `analyze` in `ci-demo/` (what CI runs) |
+| `docs` | Refresh the synthetic showcase in `docs/` from a fresh `demo` |
+
+Collection and extraction take arguments, so they are run directly:
+`python -m tbg collect {set-universe,set-shareholders,documents,gleif}` and
+`python -m tbg extract {pages,run,collect-batch} --kind {subsidiaries,shareholders,directors,pillar3,boj5}`.
+
+## What the pipeline does
+
+1. **Collection** (`tbg.collect`): downloaders for the SET universe, top-10 shareholders, One Report PDFs and GLEIF,
+   plus CSV templates for SETSMART exports and manual entry. Every CSV in a source folder is read.
+2. **Extraction** (`tbg.extract`, `prompts/extract_*.md`): finds the pages that hold subsidiary, shareholder, director,
+   Pillar 3 and BOJ.5 tables, and extracts them with the Claude API (Message Batches mode available). Rows with
+   confidence below 0.8 go to a review queue.
+3. **Entity resolution** (`tbg.names`, `tbg.resolve`, `tbg.classify`): Thai and English names, repair of Thai PDF
+   glyph artefacts, legal forms and personal titles, conservative fuzzy matching with a review file and manual
+   overrides; holder types (person, family, fund, custodian, NVDR, state, foreign).
+4. **Ultimate ownership** (`tbg.ownership`): cash-flow rights as M(I−M)⁻¹ and block-wise weakest-link control rights
+   (La Porta et al. 1999; Claessens et al. 2000), with cross-holdings and cycles, family aggregation, and Thai NVDR,
+   custodian and fund accounts excluded from control.
+5. **Groups and the finance–business nexus** (`tbg.groups`, `tbg.fi`, `tbg.analyze`): business groups around each
+   ultimate owner, pyramids and control–cash-flow wedges, and the ownership, shared-director and fund-holding links
+   between bank groups and business groups. `review/dbd_priority_queue.csv` ranks which BOJ.5 documents to buy next.
+6. **Deliverables** (`tbg.viz*`, `tbg.explorer`, `tbg.paper`): poster-size network maps and control trees drawn at
+   print size and checked for overlapping text, the HTML explorer, and the LaTeX paper in which every number is a
+   macro filled from the results.
+
+## Research: *Mapping Thailand's Business Groups: Ownership, Control, and the Finance-Business Nexus*
+
+The working paper by Thanatchon Chongmankhong is in [`paper/`](paper/): the LaTeX source
+[`paper/paper.tex`](paper/paper.tex) and its bibliography [`paper/references.bib`](paper/references.bib). `make paper`
+fills its tables and in-text numbers (macros such as `\ShareFamilyTwenty`) from the results, compiles it with
+pdfLaTeX in arXiv preprint layout (XeLaTeX when tables contain Thai names) and packs `arxiv_submission.zip`. A build
+from synthetic data is in [`docs/paper_demo.pdf`](docs/paper_demo.pdf); `make all` on the real data replaces every
+number in it.
+
+- Interactive explorer (synthetic): [online](https://thanatchon36.github.io/tbg-kit/explorer.html) ·
+  [`docs/explorer.html`](docs/explorer.html)
+- Research workflow with Claude in 8 phases, from scoping to pre-submission checks:
+  [`prompts/00_master_research_prompt.md`](prompts/00_master_research_prompt.md)
+
+<p align="center"><img src="docs/images/galaxy_demo.png" alt="Ownership network of business groups, synthetic demonstration" width="100%"></p>
 
 ## Repository layout
 
-| Path | Content |
-|---|---|
-| `tbg/` | Pipeline: collection, extraction, entity resolution, ownership and control, groups, figures, explorer, paper |
-| `prompts/` | Master research prompt and extraction prompts |
-| `seeds/` | Labels for known groups (labels only; membership comes from the data) |
-| `paper/` | LaTeX source and bibliography of the paper |
-| `templates/` | Template of the interactive explorer |
-| `tests/` | Unit tests |
-| `docs/` | Synthetic demonstration outputs |
-| `config.yaml` | All settings: project, thresholds, model, paths |
-
-## Data and ethics
-
-This repository holds code and synthetic examples only. Real data go to `work/`, which is git-ignored: shareholder and director lists contain personal data protected by Thailand's Personal Data Protection Act, so do not commit them. Read each website's terms of use before collecting data, and verify every reference in `paper/references.bib` against the original before citing it.
-
-## Citation and license
-
-Cite this software with the metadata in `CITATION.cff` (GitHub's "Cite this repository" button). Released under the MIT License, see `LICENSE`.
-
----
-
-## คู่มือภาษาไทย
-
-ชุดเครื่องมือสำหรับสร้างฐานข้อมูลการถือหุ้นของบริษัทจดทะเบียนไทยและบริษัทลูกทุกชั้นจากข้อมูลสาธารณะ เพื่อตอบว่าใครคุมบริษัทไหน ผ่านกี่ชั้น และธนาคารเชื่อมกับเครือธุรกิจอย่างไร ผลลัพธ์ที่ได้มีภาพ network ระดับโปสเตอร์, ตัวสำรวจแบบ interactive และ paper.pdf ที่ตัวเลขทุกตัวเติมอัตโนมัติจากผลวิเคราะห์
-
-> **ไฟล์ใน `demo/` ทำจากข้อมูลจำลองทั้งหมด** ชื่อบริษัท บุคคล และตัวเลขเป็นของสมมติ ใช้ดูหน้าตาผลลัพธ์และทดสอบระบบเท่านั้น ห้ามอ้างอิงเป็นข้อเท็จจริง
-
-### 0. ติดตั้ง
-
-```bash
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-python -m pytest -q                                      # ทดสอบอัลกอริทึม ควรผ่านทั้งหมด
+```
+config.yaml                 all settings: project, workspace, thresholds, model, paths
+src/tbg/
+  config.py                 defaults, YAML overrides, workspace paths
+  collect.py, extract.py    downloaders; page finder + Claude table extraction
+  names.py, resolve.py      name normalisation, Thai glyph repair, entity resolution
+  classify.py               holder types
+  build.py                  raw -> processed tables
+  ownership.py              cash-flow and control rights, cycles
+  groups.py, fi.py          business groups; financial institutions and the nexus
+  analyze.py, status.py     metrics and review queues; init and coverage report
+  viz.py, viz_galaxy.py, viz_layout.py   figures with overlap QA
+  explorer.py, paper.py     HTML explorer; LaTeX macros, tables, compile, arXiv bundle
+  synthetic.py              synthetic world for demo and CI
+  __main__.py               python -m tbg {demo,synth,init,status,collect,extract,build,analyze,figures,explorer,paper,all}
+prompts/                    master research prompt and extraction prompts
+seeds/business_groups.yaml  labels for known groups (labels only; membership comes from the data)
+paper/                      paper.tex, references.bib
+templates/explorer.html     explorer template
+scripts/make_banner.py      README banner from the galaxy map
+docs/                       synthetic showcase (images, explorer, paper), data sources, Thai guide, GitHub Pages
+tests/                      ownership algorithms
 ```
 
-ถ้าจะคอมไพล์ paper.pdf ในเครื่อง ต้องมี LaTeX (TeX Live หรือ MiKTeX) หรืออัปโหลดโฟลเดอร์ `work/paper/` ขึ้น Overleaf แล้วตั้ง compiler เป็น pdfLaTeX (หรือ XeLaTeX ถ้ามีชื่อภาษาไทย) ส่วนการสกัดตารางจาก PDF ต้องมี Anthropic API key:
+## Going from synthetic to real
 
-```bash
-export ANTHROPIC_API_KEY=...        # Windows PowerShell: $env:ANTHROPIC_API_KEY="..."
-```
+1. `make init`, then collect the files in [`docs/data_sources.md`](docs/data_sources.md) into `work/` (any subset
+   works; `make status` shows coverage).
+2. Extract the PDF tables with `python -m tbg extract ...`; check the low-confidence rows in `work/review/` and a
+   random 5% of reports by hand to report an error rate.
+3. `make build analyze`, then work through `work/review/` (entity-resolution candidates, holder types, totals above
+   100%, seed check, the validation sample) and `data/manual/family_map.csv` for the largest groups.
+4. Buy the BOJ.5 documents at the top of `review/dbd_priority_queue.csv` and repeat until the share of unresolved
+   private holdings is low enough.
+5. `make all`. The step-by-step version, in Thai, is [`docs/guide_th.md`](docs/guide_th.md).
 
-### 1. ลองรันตัวอย่างก่อน (ราว 5 นาที)
+## Limitations
+Ownership chains that leave Thailand are cut; nominees are invisible in registers; family aggregation by surname can
+be wrong; sources have different dates. Verify every reference in `paper/references.bib` and every ticker in
+`seeds/business_groups.yaml` before citing. Personal data fall under the PDPA: get ethics approval and do not publish
+individual-level data beyond what is needed (this is not legal advice). Read each website's terms of use before
+collecting data.
 
-```bash
-python -m tbg demo
-```
-
-จะได้ `demo/figures/` (ภาพ galaxy โปสเตอร์และภาพ tree รายเครือ), `demo/explorer/index.html` (เปิดด้วย browser ได้เลย) และ `demo/paper/paper.pdf`
-
-### 2. เก็บข้อมูลจริงทีละชั้น
-
-ข้อมูลจริงทั้งหมดอยู่ในโฟลเดอร์ `work/` (ตั้งค่าได้ใน `config.yaml`) เริ่มด้วย
-
-```bash
-python -m tbg init       # สร้างโฟลเดอร์และไฟล์ CSV เปล่าที่มีหัวคอลัมน์ถูกต้อง
-python -m tbg status     # ดูความครอบคลุมได้ทุกเมื่อ
-```
-
-| ขั้น | ข้อมูล | วิธีที่แนะนำ | ไฟล์ปลายทาง |
-|---|---|---|---|
-| 2.1 | รายชื่อบริษัทจดทะเบียน (SET + mai) | `python -m tbg collect set-universe` ถ้าดาวน์โหลดไม่ได้ ให้โหลด Excel จากเว็บ SET เอง แล้วเติม market cap จาก SETSMART | `data/raw/universe/` |
-| 2.2 | ผู้ถือหุ้นใหญ่ 10 รายแรก | ทางที่ดีที่สุดคือ export จาก SETSMART (ห้องสมุดมหาวิทยาลัยหลายแห่งมีสิทธิ์ใช้) หรือคีย์จากหน้าเว็บ SET ลงไฟล์เทมเพลต ส่วนคำสั่ง `collect set-shareholders` เป็นแบบทดลองและอาจถูกเว็บปฏิเสธ | `data/raw/shareholders/` |
-| 2.3 | 56-1 One Report (PDF) | ใส่ URL ของแต่ละบริษัทใน `data/manual/document_urls.csv` แล้วรัน `collect documents` หรือดาวน์โหลดเองแล้วตั้งชื่อเป็น `TICKER_ปี_ภาษา.pdf` เช่น `CPALL_2025_en.pdf` | `data/raw/documents/one_report/` |
-| 2.4 | บอจ.5 ของบริษัทโฮลดิ้งเอกชน | ขอคัดสำเนาจาก DBD (มีค่าธรรมเนียม) โดยเรียงตาม `review/dbd_priority_queue.csv` ซึ่งจัดอันดับว่าบริษัทไหนคุมบริษัทมากที่สุดแต่ยังไม่รู้ผู้ถือหุ้น | `data/raw/documents/boj5/` |
-| 2.5 | Pillar 3 ของธนาคาร | ดาวน์โหลดจากเว็บธนาคาร ตั้งชื่อ `TICKER_ปี.pdf` | `data/raw/documents/pillar3/` |
-| 2.6 | ใบอนุญาตสถาบันการเงิน | คัดจากรายชื่อของ ธปท. ก.ล.ต. คปภ. ลง `fi_licenses.csv` | `data/raw/fi/` |
-| 2.7 | GLEIF (ฟรี มี API) | `python -m tbg collect gleif` | `data/raw/gleif/` |
-
-ไฟล์ CSV ทุกไฟล์ในโฟลเดอร์เดียวกันจะถูกอ่านรวมกัน จึงเพิ่มไฟล์ที่คีย์เองได้ตลอด (เช่น `manual_2.csv`)
-
-### 3. สกัดตารางจาก PDF ด้วย Claude
-
-```bash
-python -m tbg extract pages --kind subsidiaries          # หาหน้าที่มีตาราง ไม่เสียค่า API
-python -m tbg extract run   --kind subsidiaries --dry-run --limit 3   # ดูว่าจะส่งอะไร
-python -m tbg extract run   --kind subsidiaries --limit 3             # ลองจริง 3 ฉบับ แล้วตรวจผล
-python -m tbg extract run   --kind subsidiaries --batch               # ทั้งหมดแบบ batch (ราคาถูกกว่า)
-python -m tbg extract collect-batch --kind subsidiaries               # ดึงผลเมื่อ batch เสร็จ
-```
-
-`--kind` มี `subsidiaries`, `shareholders`, `directors` (ใช้ One Report), `pillar3` และ `boj5` ถ้าการเลือกหน้าผิด ให้แก้คอลัมน์ `pages` ใน `data/interim/pages_<kind>.csv` เองได้ Prompt ที่ใช้อยู่ใน `prompts/extract_*.md` แก้ได้ตามต้องการ ผลที่ความมั่นใจต่ำกว่า 0.8 จะถูกส่งไป `review/llm_<kind>_check.csv` ให้ตรวจด้วยมือ ควรตรวจเพิ่มอีกราว 5% ของรายงานแบบสุ่มเพื่อรายงานอัตราความผิดพลาดใน paper ชื่อรุ่นโมเดลตั้งใน `config.yaml` (ตรวจชื่อและราคาล่าสุดที่ docs.claude.com)
-
-### 4. สร้างเครือข่าย วิเคราะห์ และตรวจทาน
-
-```bash
-python -m tbg build      # รวมทุกแหล่ง จับคู่ชื่อ เขียน data/processed/
-python -m tbg analyze    # เจ้าของสูงสุด เครือ พีระมิด ความเชื่อมโยงกับธนาคาร
-```
-
-หลังรันทุกครั้ง ให้ดูไฟล์ใน `review/`:
-
-- `entity_resolution_candidates.csv` ชื่อที่คล้ายกันแต่ระบบไม่กล้ารวม ถ้าเป็นบริษัทเดียวกัน ให้เพิ่มแถวใน `data/manual/entity_overrides.csv` (alias → canonical)
-- `holder_types.csv` ตรวจว่าระบบจัดประเภทผู้ถือหุ้นถูกไหม (บุคคล, กองทุน, custodian, รัฐ)
-- `holdings_issues.csv` บริษัทที่ผลรวมการถือหุ้นเกิน 100% มักเกิดจากชื่อซ้ำหรือสกัดผิด
-- `seed_check.csv` ticker ที่คาดว่าเป็นเครือเดียวกันแต่ข้อมูลแยกเป็นคนละเครือ
-- `validation_sample.csv` 100 บริษัทสุ่มไว้ให้ตรวจด้วยมือ กรอก `is_correct` (yes/no) แล้วความแม่นยำจะไปขึ้นใน paper อัตโนมัติ
-- `data/manual/family_map.csv` กำหนดว่าใครอยู่ครอบครัวไหน ใช้แทนการรวมด้วยนามสกุล ควรทำมือสำหรับ 50 เครือแรก
-
-ทำวนแบบนี้ไปเรื่อย ๆ (เพิ่ม บอจ.5 → build → analyze → ตรวจ) จนสัดส่วน "unresolved private holding" ต่ำพอ
-
-### 5. ภาพ ตัวสำรวจ และ paper
-
-```bash
-python -m tbg figures    # ภาพทั้งหมด (ราว 3 นาที)
-python -m tbg explorer   # work/explorer/index.html
-python -m tbg paper      # work/paper/paper.pdf
-python -m tbg all        # build → analyze → figures → explorer → paper
-```
-
-รูปทุกรูปที่ใช้ใน paper วาดที่ขนาดพิมพ์จริง (กว้าง 6.5 นิ้ว) และถูกตรวจอัตโนมัติว่าไม่มีตัวหนังสือทับกัน ผลอยู่ที่ `results/figure_qa.csv`
-
-แก้เนื้อหา paper ที่ `paper/paper.tex` (ไม่ใช่สำเนาใน work/ ซึ่งถูกเขียนทับทุกครั้ง) ตัวเลขในเนื้อหาใช้ macro เช่น `\ShareFamilyTwenty` จึงอัปเดตเองเมื่อข้อมูลเปลี่ยน ชื่อเรื่อง ผู้แต่ง สังกัด อีเมล และ keywords ตั้งใน `config.yaml` (หัวข้อ `project`)
-
-**รูปแบบ arXiv:** paper ใช้หน้าตาแบบ arXiv preprint และคอมไพล์ด้วย pdfLaTeX เป็นค่าเริ่มต้น หลังคอมไพล์จะได้ `work/paper/arxiv_submission.zip` (paper.tex, paper.bbl, ตาราง และรูป) ซึ่งอัปโหลดขึ้น arXiv ได้ทั้งไฟล์ ถ้ามีชื่อภาษาไทยในตาราง ระบบจะสลับไปใช้ XeLaTeX ให้เอง แต่เท่าที่ทราบ arXiv ยังไม่รองรับ XeLaTeX จึงควรเปลี่ยนชื่อเหล่านั้นเป็นอักษรโรมันก่อนส่ง และควรตรวจข้อกำหนดล่าสุดในหน้า submission help ของ arXiv
-
-### 6. ใช้ Master prompt
-
-`prompts/00_master_research_prompt.md` คือ prompt หลักสำหรับคุมงานวิจัยทั้งโครงการกับ Claude แบ่งเป็น 8 phase ตั้งแต่วางขอบเขตจนตรวจก่อนส่ง วิธีใช้อยู่ต้นไฟล์
-
-### 7. ข้อควรระวัง
-
-- **เอกสารอ้างอิง** ใน `paper/references.bib` และในเนื้อหาต้องตรวจกับต้นฉบับทุกรายการก่อนส่ง
-- **รายชื่อเครือ** ใน `seeds/business_groups.yaml` ใช้แค่ตั้งชื่อ ต้องตรวจ ticker กับ SET ก่อน โครงสร้างเปลี่ยนบ่อย
-- **ข้อมูลส่วนบุคคล** ชื่อกรรมการและผู้ถือหุ้นที่เป็นบุคคลอยู่ภายใต้ PDPA ใช้เพื่อการวิจัยได้เมื่อมีมาตรการคุ้มครองที่เหมาะสม ควรผ่านคณะกรรมการจริยธรรมการวิจัย และไม่เผยแพร่ข้อมูลรายบุคคลเกินจำเป็น (นี่ไม่ใช่คำแนะนำทางกฎหมาย)
-- **การดึงข้อมูลจากเว็บ** อ่านเงื่อนไขการใช้งานของแต่ละเว็บก่อน ตั้ง `user_agent` ให้มีอีเมลของคุณ และอย่าลด `delay_seconds`
-- **ข้อจำกัดที่ต้องเขียนใน paper** สายการถือหุ้นที่ออกนอกประเทศจะขาด, nominee มองไม่เห็นจากทะเบียน, การรวมครอบครัวด้วยนามสกุลอาจผิด และข้อมูลแต่ละแหล่งมีวันที่ต่างกัน
-
-### โครงสร้างไฟล์
-
-```
-tbg/            โค้ด (build, ownership, groups, fi, analyze, viz*, explorer, paper, collect, extract)
-prompts/        master prompt + prompt สกัดข้อมูล
-seeds/          รายชื่อเครือสำหรับตั้งชื่อ
-paper/          paper.tex + references.bib (ต้นฉบับที่แก้ได้)
-templates/      แม่แบบ explorer.html
-tests/          unit tests ของอัลกอริทึม
-config.yaml     การตั้งค่าทั้งหมด
-docs/           ตัวอย่างผลลัพธ์จากข้อมูลจำลอง (ภาพ, paper, explorer)
-demo/, work/    สร้างขึ้นตอนรัน ไม่ถูกเก็บใน git (ดู .gitignore)
-```
+## Citation
+See [`CITATION.cff`](CITATION.cff) (GitHub's "Cite this repository" button) and [`CHANGELOG.md`](CHANGELOG.md).
+License: MIT.

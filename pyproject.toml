@@ -1,0 +1,43 @@
+[project]
+name = "tbg"
+version = "0.1.0"
+description = "Ownership and control network of Thailand's business groups from public disclosures"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Thanatchon Chongmankhong" }]
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "networkx>=3.1",
+    "python-igraph>=0.11",
+    "matplotlib>=3.7",
+    "pyyaml>=6.0",
+    "rapidfuzz>=3.0",
+    "circlify>=0.15",
+    "pdfplumber>=0.10",
+    "pypdf>=4.0",
+    "pypdfium2>=4.0",
+    "xlrd>=2.0",
+    "lxml>=4.9",
+    "requests>=2.31",
+    "openpyxl>=3.1",
+    "anthropic>=0.40",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+tbg = "tbg.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tbg"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

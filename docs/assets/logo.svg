@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="t">
+  <title id="t">tbg-kit</title>
+  <rect width="128" height="128" rx="28" fill="#0d1224"/>
+  <!-- a pyramid: the ultimate owner controls a holding, which controls three firms -->
+  <g stroke="#9fb0d0" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M64 30 L64 58"/>
+    <path d="M64 58 L34 92 M64 58 L64 96 M64 58 L94 92"/>
+  </g>
+  <!-- a cross-holding arc between two firms -->
+  <path d="M34 92 Q64 112 94 92" fill="none" stroke="#f5c26b" stroke-width="2.5" stroke-dasharray="4 4" opacity="0.8"/>
+  <circle cx="64" cy="58" r="44" fill="none" stroke="#f5c26b" stroke-width="2" opacity="0.25"/>
+  <circle cx="64" cy="30" r="10" fill="#f5c26b"/>
+  <circle cx="64" cy="58" r="7" fill="#e8ecf6"/>
+  <circle cx="34" cy="92" r="6" fill="#5ec8c4"/>
+  <circle cx="64" cy="96" r="6" fill="#7aa7ff"/>
+  <circle cx="94" cy="92" r="6" fill="#c58cff"/>
+</svg>

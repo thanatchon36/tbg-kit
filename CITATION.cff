@@ -1,16 +1,29 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+message: "Please cite the paper (preferred-citation); if you use the tbg pipeline, also cite the software."
 title: "tbg: Mapping Thailand's Business Groups. Ownership, Control, and the Finance-Business Nexus"
+abstract: >-
+  Open, reproducible pipeline that maps the ownership and control network of
+  Thailand's business groups from public disclosures: Claude-assisted table
+  extraction, Thai and English entity resolution, ultimate ownership with
+  cash-flow and weakest-link control rights, pyramids, the finance-business
+  nexus, publication-ready figures, an interactive explorer and an
+  arXiv-style paper.
+type: software
 authors:
-  - given-names: Thanatchon
-    family-names: Chongmankhong
+  - family-names: Chongmankhong
+    given-names: Thanatchon
 version: 0.1.0
 date-released: 2026-11-07
 license: MIT
-keywords:
-  - business groups
-  - ultimate ownership
-  - pyramids
-  - interlocking directorates
-  - financial conglomerates
-  - Thailand
+repository-code: "https://github.com/thanatchon36/tbg-kit"
+url: "https://thanatchon36.github.io/tbg-kit/"
+keywords: [business-groups, ultimate-ownership, pyramids, interlocking-directorates, financial-conglomerates, thailand]
+preferred-citation:
+  type: generic
+  title: "Mapping Thailand's Business Groups: Ownership, Control, and the Finance-Business Nexus"
+  authors:
+    - family-names: Chongmankhong
+      given-names: Thanatchon
+  year: 2026
+  url: "https://github.com/thanatchon36/tbg-kit"
+  notes: "Working paper draft; the demonstration in docs/ is built from synthetic data."
