@@ -1,0 +1,40 @@
+# Seed list of Thai business groups and bank groups.
+# Seeds ONLY give readable labels to groups found in the data. Membership, ultimate owners and all
+# numbers come from the ownership data, never from this file.
+# Anchors are SET tickers believed to belong to each group as of mid-2026 (from public knowledge).
+# VERIFY every anchor on set.or.th before use and set verified: true. Structures change through
+# mergers, delistings and new holding companies. `review/seed_check.csv` flags anchors that the
+# data place in different groups, which is exactly what you want to look at.
+# owner_type_hint is a label for your own checking; it is not used in any computation.
+groups:
+  - {id: cp, name_en: Charoen Pokphand Group, name_th: เครือเจริญโภคภัณฑ์, owner_type_hint: family, anchors: [CPF, CPALL, CPAXT, TRUE], verified: false}
+  - {id: central, name_en: Central Group, name_th: กลุ่มเซ็นทรัล, owner_type_hint: family, anchors: [CPN, CRC, CENTEL], verified: false}
+  - {id: tcc, name_en: TCC Group, name_th: กลุ่มทีซีซี, owner_type_hint: family, anchors: [BJC, AWC, FPT], verified: false}
+  - {id: scg, name_en: SCG, name_th: เอสซีจี, owner_type_hint: crown, anchors: [SCC, SCGP], verified: false}
+  - {id: ptt, name_en: PTT Group, name_th: กลุ่ม ปตท., owner_type_hint: state, anchors: [PTT, PTTEP, PTTGC, TOP, IRPC, GPSC, OR], verified: false}
+  - {id: egat, name_en: EGAT-related power firms, name_th: กลุ่ม กฟผ., owner_type_hint: state, anchors: [RATCH, EGCO], verified: false}
+  - {id: aot, name_en: Airports of Thailand, name_th: ท่าอากาศยานไทย, owner_type_hint: state, anchors: [AOT], verified: false}
+  - {id: gulf, name_en: Gulf Group, name_th: กลุ่มกัลฟ์, owner_type_hint: family, anchors: [GULF, ADVANC, THCOM], verified: false}
+  - {id: bts, name_en: BTS Group, name_th: กลุ่มบีทีเอส, owner_type_hint: family, anchors: [BTS, VGI, RABBIT], verified: false}
+  - {id: ck, name_en: CH. Karnchang Group, name_th: กลุ่ม ช.การช่าง, owner_type_hint: family, anchors: [CK, BEM, CKP, TTW], verified: false}
+  - {id: lh, name_en: Land and Houses Group, name_th: กลุ่มแลนด์ แอนด์ เฮ้าส์, owner_type_hint: family, anchors: [LH, HMPRO, QH], verified: false}
+  - {id: saha, name_en: Saha Group, name_th: เครือสหพัฒน์, owner_type_hint: family, anchors: [SPI, SPC, ICC], verified: false}
+  - {id: bdms, name_en: Bangkok Dusit Medical Services, name_th: กรุงเทพดุสิตเวชการ, owner_type_hint: family, anchors: [BDMS, BA], verified: false}
+  - {id: banpu, name_en: Banpu Group, name_th: กลุ่มบ้านปู, owner_type_hint: family, anchors: [BANPU, BPP], verified: false}
+  - {id: thaiunion, name_en: Thai Union Group, name_th: ไทยยูเนี่ยน, owner_type_hint: family, anchors: [TU, ITC], verified: false}
+  - {id: indorama, name_en: Indorama Ventures, name_th: อินโดรามา เวนเจอร์ส, owner_type_hint: family, anchors: [IVL], verified: false}
+  - {id: minor, name_en: Minor Group, name_th: กลุ่มไมเนอร์, owner_type_hint: family, anchors: [MINT], verified: false}
+  - {id: wha, name_en: WHA Group, name_th: กลุ่มดับบลิวเอชเอ, owner_type_hint: family, anchors: [WHA, WHAUP], verified: false}
+  - {id: singha, name_en: Boon Rawd / Singha, name_th: กลุ่มบุญรอด, owner_type_hint: family, anchors: [S], verified: false}
+  - {id: osotspa, name_en: Osotspa, name_th: โอสถสภา, owner_type_hint: family, anchors: [OSP], verified: false}
+  - {id: betagro, name_en: Betagro Group, name_th: เครือเบทาโกร, owner_type_hint: family, anchors: [BTG], verified: false}
+  # ---------------- bank groups (finance-business nexus) ----------------
+  - {id: bbl, name_en: Bangkok Bank, name_th: ธนาคารกรุงเทพ, owner_type_hint: widely_or_family, anchors: [BBL], verified: false}
+  - {id: kbank, name_en: Kasikornbank, name_th: ธนาคารกสิกรไทย, owner_type_hint: widely_held, anchors: [KBANK], verified: false}
+  - {id: scbx, name_en: SCB X, name_th: เอสซีบี เอกซ์, owner_type_hint: mixed, anchors: [SCB], verified: false}
+  - {id: ktb, name_en: Krungthai Bank, name_th: ธนาคารกรุงไทย, owner_type_hint: state, anchors: [KTB], verified: false}
+  - {id: bay, name_en: Krungsri (Bank of Ayudhya), name_th: กรุงศรีอยุธยา, owner_type_hint: foreign, anchors: [BAY], verified: false}
+  - {id: ttb, name_en: TMBThanachart / Thanachart Capital, name_th: ทีเอ็มบีธนชาต, owner_type_hint: mixed, anchors: [TTB, TCAP], verified: false}
+  - {id: kkp, name_en: Kiatnakin Phatra, name_th: เกียรตินาคินภัทร, owner_type_hint: widely_held, anchors: [KKP], verified: false}
+  - {id: tisco, name_en: TISCO Financial Group, name_th: ทิสโก้ไฟแนนเชียลกรุ๊ป, owner_type_hint: widely_held, anchors: [TISCO], verified: false}
+  - {id: lhfg, name_en: LH Financial Group, name_th: แอล เอช ไฟแนนซ์เชียล กรุ๊ป, owner_type_hint: mixed, anchors: [LHFG], verified: false}

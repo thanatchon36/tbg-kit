@@ -1,0 +1,35 @@
+# Real data and generated outputs. Shareholder and director lists contain personal data (PDPA): never commit them.
+work/
+demo/
+ci-demo/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Secrets (ANTHROPIC_API_KEY etc.)
+.env
+*.key
+
+# LaTeX build files if paper/ is compiled in place
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/paper.pdf
+paper/generated/
+paper/figures/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

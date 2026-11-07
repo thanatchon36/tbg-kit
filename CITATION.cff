@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "tbg: Mapping Thailand's Business Groups. Ownership, Control, and the Finance-Business Nexus"
+authors:
+  - given-names: Thanatchon
+    family-names: Chongmankhong
+version: 0.1.0
+date-released: 2026-11-07
+license: MIT
+keywords:
+  - business groups
+  - ultimate ownership
+  - pyramids
+  - interlocking directorates
+  - financial conglomerates
+  - Thailand

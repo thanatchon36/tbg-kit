@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------------------
+# Thai Business Groups Network: configuration
+# Edit this file, then run:  python -m tbg all
+# ---------------------------------------------------------------------------
+project:
+  title: "Mapping Thailand's Business Groups: Ownership, Control, and the Finance-Business Nexus"
+  short_title: "Thai Business Groups"
+  authors: "Thanatchon Chongmankhong"   # several authors: a list of {name: ..., affiliation: ..., email: ...}
+  affiliation: ""                       # e.g. "Faculty of Economics, ... University" (shown under the name)
+  email: ""
+  keywords: [business groups, ultimate ownership, pyramids, interlocking directorates, financial conglomerates, Thailand]
+  data_year: 2025          # fiscal year of the 56-1 One Report you extract
+  as_of: "2026-03-31"      # reference date for shareholder registers (latest <= this date is used)
+
+workspace: work            # all real data lives under ./work  (the demo uses ./demo)
+seeds_file: seeds/business_groups.yaml
+
+ownership:
+  thresholds: [0.10, 0.20, 0.50]   # control thresholds reported (La Porta et al. 1999 use 10% and 20%)
+  group_threshold: 0.20            # threshold that defines group membership
+  family_aggregation: surname      # surname | manual | none  (manual uses data/manual/family_map.csv only)
+  non_candidate_types: [nvdr, custodian, fund, institutional, unknown]
+  state_investors_as_state: false  # robustness: treat SSO / GPF / Vayupak as state owners
+  min_store_cr: 0.005
+  edge_source_priority: [dbd_boj5, set_top10, one_report_direct, manual, pillar3, one_report_effective]
+  pct_tolerance: 1.0               # percentage points above 100% tolerated before flagging
+  scale_over_100: true
+  link_min_pct: 1.0
+  split_groups_under: [state, crown]   # state/Crown firms grouped under their top firm (PTT, AOT, ...)
+
+resolution:
+  auto_merge_score: 95             # rapidfuzz token_sort_ratio for automatic merge
+  review_score: 88                 # pairs between review_score and auto_merge_score go to review/
+
+fi:
+  # Fund names containing these strings are mapped to the bank (ticker) whose AMC manages them.
+  # VERIFY before use; affiliations change.
+  amc_brand_map:
+    "KASIKORN ASSET": KBANK
+    "KRUNGTHAI ASSET": KTB
+    "BBL ASSET": BBL
+    "KRUNGSRI ASSET": BAY
+    "SCB ASSET": SCB
+
+llm:
+  model: claude-sonnet-5-5         # check https://docs.claude.com for current model names
+  max_tokens: 16000
+  input_mode: auto                 # auto | pdf | text
+  max_pages_per_request: 20
+  context_pages: 1
+  max_candidate_pages: 24
+
+collect:
+  user_agent: "tbg-research/0.1 (academic research; contact: your-email@university.ac.th)"
+  delay_seconds: 2.5
+  timeout: 60
+  # EXPERIMENTAL: SET website endpoints change without notice and may block scripts.
+  # Check SET's terms of use first; SETSMART exports or manual downloads are the safe path.
+  set_endpoints:
+    listed_xls: "https://www.set.or.th/dat/eod/listedcompany/static/listedCompanies_en_US.xls"
+    stock_list: "https://www.set.or.th/api/set/stock/list"
+    shareholders: "https://www.set.or.th/api/set/stock/{symbol}/shareholder?lang={lang}"
+  gleif_base: "https://api.gleif.org/api/v1"
+
+viz:
+  min_group_size: 3
+  label_top_groups: 40
+  dpi: 300
+  poster_inches: 24
+  paper_inches: 6.5
+
+paper:
+  compile: true
+  engine: auto          # auto | pdflatex | xelatex  (auto: pdfLaTeX, the arXiv default, unless Thai script appears)
+  arxiv_bundle: true    # after a pdfLaTeX build write paper/arxiv_submission.zip (tex + bbl + tables + figures)

@@ -1,0 +1,370 @@
+% =====================================================================================
+%  Thai business groups: paper template in arXiv preprint style.
+%  Every number comes from generated/macros.tex and generated/tab_*.tex, written by
+%  `python -m tbg paper`. Edit THIS file (repo/paper/paper.tex); the workspace copy is
+%  overwritten on each build. `python -m tbg paper` compiles with pdfLaTeX (the arXiv
+%  default) and switches to XeLaTeX only when Thai script appears in names.
+% =====================================================================================
+\documentclass[11pt]{article}
+\usepackage{iftex}
+\newif\ifunicodeengine
+\ifXeTeX\unicodeenginetrue\fi
+\ifLuaTeX\unicodeenginetrue\fi
+\usepackage{amsmath}
+\ifunicodeengine
+  \usepackage{fontspec}
+  \IfFontExistsTF{texgyretermes-regular.otf}{\setmainfont{texgyretermes}[Extension=.otf,
+    UprightFont=*-regular, BoldFont=*-bold, ItalicFont=*-italic, BoldItalicFont=*-bolditalic]}{}
+  \IfFileExists{unicode-math.sty}{\usepackage{unicode-math}%
+    \IfFontExistsTF{texgyretermes-math.otf}{\setmathfont{texgyretermes-math.otf}}{}}{}
+\else
+  \usepackage[T1]{fontenc}
+  \IfFileExists{newtxtext.sty}{\usepackage{newtxtext}\usepackage{newtxmath}}{\usepackage{mathptmx}}
+\fi
+\usepackage[letterpaper,textwidth=6.5in,textheight=9in,top=1in,headheight=14pt,headsep=25pt,footskip=30pt]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx}
+\usepackage[round,authoryear]{natbib}
+\usepackage{xcolor}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.5pt}
+
+% ---- Thai names: XeLaTeX/LuaLaTeX only (pdfLaTeX builds never contain Thai script) ----
+\newif\ifthaifound  % defined outside the conditional so pdfLaTeX can skip the block safely
+\ifunicodeengine
+  \newcommand{\trythaifont}[1]{\ifthaifound\else\IfFontExistsTF{#1}{\newfontfamily\thaifont[Script=Thai]{#1}\global\thaifoundtrue}{}\fi}
+  \trythaifont{Sarabun}\trythaifont{TH Sarabun New}\trythaifont{Noto Serif Thai}\trythaifont{Noto Sans Thai}
+  \trythaifont{Leelawadee UI}\trythaifont{Tahoma}\trythaifont{Loma}\trythaifont{Garuda}\trythaifont{Norasi}
+  \ifthaifound\else\let\thaifont\rmfamily\fi
+  \ifXeTeX\newcommand{\thai}[1]{{\thaifont\XeTeXlinebreaklocale "th"\XeTeXlinebreakskip=0pt plus 1pt #1}}
+  \else\newcommand{\thai}[1]{{\thaifont #1}}\fi
+\else
+  \newcommand{\thai}[1]{#1}
+\fi
+
+\newif\ifsynthetic
+\InputIfFileExists{generated/macros.tex}{}{\errmessage{generated/macros.tex is missing: run python -m tbg paper}}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!60!black,
+  pdftitle={\PaperTitle}, pdfauthor={\PaperAuthors}, pdfkeywords={\PaperKeywordsPlain}}
+
+% ---- arXiv preprint look: running head, ruled title block, compact section styles ----
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\scshape \PaperShortTitle}
+\fancyhead[R]{\small\scshape A Preprint}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}{-2.0ex \@plus -0.5ex \@minus -0.2ex}%
+  {1.5ex \@plus 0.3ex \@minus 0.2ex}{\large\bfseries\raggedright}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}{-1.8ex \@plus -0.5ex \@minus -0.2ex}%
+  {0.8ex \@plus 0.2ex}{\normalsize\bfseries\raggedright}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}{1.5ex \@plus 0.5ex \@minus 0.2ex}{-1em}%
+  {\normalsize\bfseries}}
+\makeatother
+\renewcommand{\maketitle}{%
+  \thispagestyle{plain}%
+  \par\vbox{\hrule height 4pt\vskip 0.25in
+    {\centering\LARGE\bfseries \PaperTitle\par}%
+    \vskip 0.22in\hrule height 1pt}%
+  \vskip 0.12in
+  {\centering{\scshape A Preprint}\par
+   \vskip 0.25in\PaperAuthorBlock\par
+   \vskip 0.2in\today\par}%
+  \vskip 0.15in}
+\renewenvironment{abstract}{\centerline{\large\bfseries Abstract}\vspace{0.3ex}\begin{quote}}{\end{quote}}
+\newcommand{\keywords}[1]{\par\noindent\textbf{\textit{Keywords}}\enspace #1\par\medskip}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Thailand's corporate sector is organised around business groups: families, the state and a few foreign
+parents that control many firms through chains of ownership. No open, firm-level map of these groups exists. We
+build one from public sources only: shareholder registers published by the Stock Exchange of Thailand, subsidiary
+disclosures in the Form 56-1 One Report, shareholder lists filed with the Department of Business Development, bank
+Pillar~3 reports and the Global LEI System. The network links \NEntities{} entities through \NHoldings{} ownership
+ties. Tracing every chain to its end with weakest-link control rights, we identify \NGroupsMulti{} groups that control
+two or more firms and \NGroupsTenPlus{} that control ten or more. At the \ThresholdPct{} control threshold, families
+are the ultimate owners of \ShareFamilyTwenty{} of listed firms and the state of \ShareStateTwenty{};
+\ShareWidelyTwenty{} are widely held. Among controlled listed firms, \SharePyramid{} sit inside pyramids, and
+control rights exceed cash-flow rights by \MeanWedge{} percentage points on average. Bank groups share directors with
+\ShareBigGroupsBankInterlock{} of business groups that have ten or more firms. Code and data pipeline are released so
+the map can be rebuilt every year.
+\ifsynthetic\par\smallskip\textit{Remark.} This version is a demonstration built from synthetic data: all companies, persons and figures in it are fictional.\fi
+\end{abstract}
+\PaperKeywordsLine
+
+\section{Introduction}
+Business groups dominate private economic activity in many emerging economies \citep{khanna2007,morck2005}. In
+Thailand, a small number of family conglomerates, state enterprises and bank-centred groups have shaped capital
+accumulation since the mid-twentieth century \citep{suehiro1989}, and the 1997 crisis restructured rather than dissolved
+them \citep{polsiri2006,pasuk2008}. Who owns whom therefore matters for questions as different as competition in
+retail and telecommunications, the protection of minority shareholders, and the exposure of banks to a handful of
+borrowers.
+
+Measuring groups is hard because a group is not a legal entity. It is defined by control relationships that run
+through listed and unlisted companies, Thai and foreign registries, and nominee or depositary accounts. Existing
+evidence for Thailand relies on samples of listed firms and their largest shareholders
+\citep{claessens2000,wiwattanakantang2001}. The unlisted layer, where most subsidiaries and the holding companies at
+the top of each group sit, remains largely unmapped.
+
+This paper builds an open and reproducible map of that layer and uses it to answer three questions.
+\textbf{RQ1:} Who ultimately controls Thai listed firms and the subsidiaries beneath them, and how many groups are
+there? \textbf{RQ2:} How far do control rights diverge from cash-flow rights, and how deep are the pyramids?
+\textbf{RQ3:} How are financial institutions connected to business groups through ownership, shared directors and
+fund holdings?
+
+We make three contributions. First, coverage: the network includes every subsidiary, associate and joint venture
+that listed firms are required to disclose, plus the private holding companies above them. Second, measurement: a
+two-stage ultimate-owner algorithm handles cross-holdings and cycles, aggregates family members, and excludes
+depositary, custodian and fund accounts that hold shares without controlling them. Third, a description of the
+finance--business nexus that combines three kinds of links. Section~\ref{sec:context} describes the disclosure
+regime, Section~\ref{sec:data} the data, Section~\ref{sec:method} the measures, Section~\ref{sec:results} the
+results and Section~\ref{sec:discussion} the limitations.
+
+\section{Institutional background}\label{sec:context}
+\paragraph{Listed companies.} Since fiscal year 2021, listed companies file an annual registration statement and
+annual report combined as the Form 56-1 One Report. It contains a chart and a list of the group's shareholding
+structure, and the notes to the financial statements report investments in subsidiaries, associates and joint
+ventures with direct and effective ownership percentages. The Stock Exchange of Thailand (SET) publishes the ten
+largest shareholders of each company at the latest book-closing date, and holders must report to the Securities and
+Exchange Commission (SEC) whenever their stake crosses a multiple of 5\% (Form 246-2).
+
+\paragraph{Depositary receipts and nominees.} Thai NVDR Co., Ltd., a subsidiary of the SET, issues non-voting
+depositary receipts and therefore appears among the largest shareholders of many companies without exercising
+control. Foreign custodians and nominee accounts also appear under their own names. Treating either as an owner would
+overstate dispersed and foreign ownership, so we exclude both from the set of possible controllers.
+
+\paragraph{Private companies.} Private limited companies file a shareholder list (form BOJ.5) and audited financial
+statements with the Department of Business Development (DBD) every year. Each company has a 13-digit registration
+number that also serves as its tax identification number, which we use to link records across sources.
+
+\paragraph{Financial groups.} The Bank of Thailand supervises banks on a consolidated basis as financial business
+groups, and banks typically disclose the composition of their group in Pillar~3 reports. Several groups now operate
+through a holding company above the bank (for example SCB~X since 2022), so the bank is not always the apex.
+
+\paragraph{Foreign ownership.} Under the Foreign Business Act B.E.~2542 (1999), a company in which foreigners hold half
+or more of the shares is treated as foreign for restricted businesses. Some firms therefore combine a Thai majority
+of shares with voting arrangements or preference shares that give control elsewhere. Share percentages are thus a
+lower bound on the complexity of control, a point we return to in Section~\ref{sec:discussion}.
+
+\section{Data}\label{sec:data}
+Table~\ref{tab:sources} lists the sources and Table~\ref{tab:coverage} reports coverage. Shareholdings are as of \AsOfDate{} and subsidiary lists come from fiscal year \DataYear{} reports. Subsidiary tables were
+extracted from the One Report PDFs with a large language model instructed to copy, not infer, every row; low-confidence
+rows and a random share of documents were checked by hand. Names were normalised (legal forms, titles, Thai PDF glyph
+artefacts) and matched with exact keys, registration numbers and a conservative fuzzy rule whose borderline cases were
+reviewed manually. When two sources report the same link we keep, in order, DBD shareholder lists, SET registers and
+direct holdings in the One Report; effective holdings are used only when no direct figure is available.
+
+\begin{table}[t]
+\centering\small
+\caption{Public data sources}\label{tab:sources}
+\begin{tabularx}{\textwidth}{lXl}
+\toprule
+Source & Content used & Layer of the network\\
+\midrule
+SET company pages & Top-10 shareholders at the latest book-closing date; sector; market value & Owners of listed firms\\
+Form 56-1 One Report & Shareholding-structure section; notes on investments in subsidiaries, associates and joint ventures & Subsidiaries of listed firms\\
+SEC Form 246-2 & Acquisitions and disposals crossing each 5\% threshold & Changes in large stakes\\
+DBD (BOJ.5 and statements) & Shareholder lists and investment notes of private companies & Private holding companies\\
+Bank Pillar 3 reports & Composition of the financial business group & Bank groups\\
+GLEIF Level 2 & Direct and ultimate accounting parents of LEI holders & Cross-check\\
+Licence registers & Banks, securities, asset-management and insurance licences & Financial-institution flags\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[t]
+\centering\small
+\caption{Coverage of the network}\label{tab:coverage}
+\input{generated/tab_coverage.tex}
+\end{table}
+
+\section{Measurement}\label{sec:method}
+\paragraph{Network.} Let $w_{ij}\in(0,1]$ be the fraction of entity $j$'s shares held directly by entity $i$, and $M$
+the matrix of these weights. Persons sharing a surname are aggregated into a family node, a reasonable default in
+Thailand where surnames are registered and rarely shared by unrelated families; a manual mapping overrides it.
+
+\paragraph{Cash-flow rights.} The share of $c$'s profits accruing to $a$ through all chains is the $(a,c)$ element of
+\begin{equation}
+\mathrm{CF} \;=\; \sum_{k\ge 1} M^{k} \;=\; M\,(I-M)^{-1},
+\end{equation}
+which remains well defined with cross-holdings \citep{brioschi1989}.
+
+\paragraph{Control rights.} Following \citet{laporta1999} and \citet{claessens2000}, control along a chain is set by its
+weakest link. We apply the rule block by block, so that one block of votes is never counted twice:
+\begin{equation}
+\mathrm{CR}(a,c)=\min\Big\{1,\;\sum_{s\,\in\,\mathcal{P}(c)} \min\big\{w_{sc},\,\mathrm{CR}(a,s)\big\}\Big\},\qquad \mathrm{CR}(a,a)=1,
+\end{equation}
+where $\mathcal{P}(c)$ is the set of direct shareholders of $c$. Nodes on ownership cycles (\NCycles{} cycles in the
+data) are solved by fixed-point iteration.
+
+\paragraph{Ultimate owners and groups.} In a first stage, the candidate owners are terminal nodes: families, persons,
+state bodies, the Crown Property Bureau, foreign parents and private companies whose own shareholders are unknown.
+Thai NVDR, custodians, funds and state investment funds (such as the Social Security Office) are excluded. A firm's
+ultimate owner is the candidate with the largest control right at or above the threshold $t$ (\ThresholdPct{} in the
+main specification; 10\% and 50\% as robustness). Firms without one are widely held; in a second stage, firms they
+control are assigned to them, which separates ``widely held corporation'' and ``widely held financial'' apexes as in
+\citet{laporta1999}. A group is the set of firms sharing an ultimate owner. For firms controlled by the state or the
+Crown Property Bureau, groups are defined one level down, at the top firm (for example an energy or airport holding),
+because merging all state enterprises into one group would hide their separate structures; ultimate-owner shares are
+unaffected by this choice.
+
+\paragraph{Pyramids and the wedge.} The depth of a firm is the length of the shortest control chain from its ultimate
+owner along links controlled at $t$ or more. A firm sits in a pyramid when its depth is two or more. The wedge is
+$\mathrm{CR}-\mathrm{CF}$ \citep{claessens2000,almeida2006}.
+
+\paragraph{Finance--business nexus.} A bank group is linked to a business group through (i) ownership of at least 1\%
+in either direction, (ii) a person on the board of a financial institution in the bank group and on a board in the
+business group \citep{mizruchi1996}, or (iii) funds managed by the bank group's asset-management company holding
+shares in the business group's listed firms.
+
+\section{Results}\label{sec:results}
+\subsection{The map}
+Figure~\ref{fig:galaxy} draws every group with at least three firms. The largest, \TopGroupLabel, controls
+\TopGroupFirms{} firms in \TopGroupIndustries{} SET industries, and the most diversified group spans
+\MaxIndustries{} industries. \NGroupsMultiListed{} groups control two or more listed firms; together they account for
+\ShareAffiliated{} of listed firms. The network is highly connected: the largest weakly connected component contains
+\LargestWCCShare{} of all entities. Figure~\ref{fig:tree} shows the full control tree of the largest group.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{figures/galaxy_paper.png}
+\caption{Thai business groups. Each circle is a group with at least three firms (area proportional to the number
+of firms); the ultimate owner sits at the centre and controlled firms lie on rings by ownership distance. Ring colour
+gives the type of ultimate owner, node colour the industry, and arcs the strongest links between groups (blue: shared
+directors; orange: cross-ownership). Numbers match the ranks in Table~\ref{tab:groups}.}\label{fig:galaxy}
+\end{figure}
+
+\subsection{Who controls listed firms}
+Table~\ref{tab:uo} and Figure~\ref{fig:uo} report ultimate owners. At the \ThresholdPct{} threshold, the most common
+ultimate owner is the \DominantUOType{} category; families control \ShareFamilyTwenty, the state \ShareStateTwenty,
+foreign parents \ShareForeignTwenty{} and the Crown Property Bureau \ShareCrownTwenty{} of listed firms, while
+\ShareWidelyTwenty{} are widely held. A residual \ShareUnresolvedTwenty{} ends at private holding companies whose
+shareholders are not yet in the data; they are the priority for further DBD requests. At the 10\% threshold, the
+family share is \ShareFamilyTen.
+
+\begin{table}[t]
+\centering\small
+\caption{Ultimate owners of listed firms (\% of firms; last column weighted by market value)}\label{tab:uo}
+\input{generated/tab_uo.tex}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_uo.pdf}
+\caption{Ultimate owners of listed firms by control threshold.}\label{fig:uo}
+\end{figure}
+
+\subsection{Size and concentration of groups}
+Table~\ref{tab:groups} lists the largest groups. Group size is highly skewed (Figure~\ref{fig:groups}): the ten
+largest groups by market value hold \TopTenMcapShare{} of the market value of listed firms, and the
+Herfindahl--Hirschman index across groups is \HHIGroups.
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{The fifteen largest groups by number of firms}\label{tab:groups}
+\input{generated/tab_groups.tex}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_groups.pdf}
+\caption{Distribution of group size and depth.}\label{fig:groups}
+\end{figure}
+
+\subsection{Pyramids and the separation of ownership and control}
+Among listed firms with an ultimate owner, \SharePyramid{} are held through pyramids. The mean wedge between control
+and cash-flow rights is \MeanWedge{} percentage points (median \MedianWedge), and the mean ratio of cash-flow to control
+rights is \MeanCFCRRatio. Control chains reach \MaxDepth{} links; the average firm in the network sits \MeanDepth{}
+links below its ultimate owner (Figure~\ref{fig:wedge}). \NFirmsInCycles{} firms belong to \NCycles{} ownership cycles.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_wedge.pdf}
+\caption{Control versus cash-flow rights of listed firms, and the length of control chains.}\label{fig:wedge}
+\end{figure}
+
+\subsection{The finance--business nexus}
+The data contain \NFIEntities{} financial institutions, including \NBanks{} banks, organised in \NBankGroups{} bank
+groups. We find \NNexusPairs{} linked pairs of bank groups and business groups: \NDirectorLinks{} director links,
+\NOwnershipLinks{} ownership links and \NFundLinks{} fund links. Bank groups share at least one director with
+\ShareBigGroupsBankInterlock{} of business groups that have ten or more firms (Figure~\ref{fig:nexus},
+Table~\ref{tab:nexus}). Fund links reflect portfolio investment by asset-management arms on behalf of unit holders,
+not control by the bank.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_nexus.pdf}
+\caption{Links between bank groups and the most connected business groups.}\label{fig:nexus}
+\end{figure}
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{Strongest bank--business group links}\label{tab:nexus}
+\input{generated/tab_nexus.tex}
+\end{table}
+
+\subsection{Robustness and validation}
+Table~\ref{tab:robust} recomputes ultimate owners at alternative thresholds, without family aggregation, and treating
+state investment funds as owners. GLEIF reports \GLEIFPairs{} parent relationships for Thai entities in our data; the
+network agrees with \GLEIFAgreement{} of them (same group or an ownership path from parent to child).
+\ValidationStatement
+
+\begin{table}[t]
+\centering\small
+\caption{Robustness: ultimate owners of listed firms under alternative specifications (\% of firms)}\label{tab:robust}
+\input{generated/tab_robust.tex}
+\end{table}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{figures/tree_top.pdf}
+\caption{Control tree of the largest group. The ultimate owner is at the centre; each ring is one more ownership link.
+Listed companies are labelled with ticker and name; squares mark holding
+companies.}\label{fig:tree}
+\end{figure}
+
+\section{Discussion and limitations}\label{sec:discussion}
+Four limitations bound the interpretation. First, chains that leave Thailand through holding companies registered
+abroad stop at the border unless the foreign parent is itself disclosed, so foreign ultimate owners may be
+intermediate vehicles. Second, nominee shareholders and voting agreements are invisible in share registers; control
+can be stronger, or held by different people, than the percentages suggest. Third, surname-based family aggregation
+can merge unrelated people who share a surname or split families whose members use different surnames; the manual
+mapping and the robustness table address this only in part. Fourth, sources differ in their reference dates (book
+closing, fiscal year end, annual general meeting), so the network is a snapshot assembled from several dates within
+one year. Accounting control under TFRS~10 can also differ from the share-based definition used here.
+
+Within these limits, the map supports descriptive conclusions about the reach of groups, the use of pyramids and the
+ties between banks and business groups. Causal questions, such as whether pyramids are associated with lower minority
+shareholder value \citep{bertrand2002,masulis2011}, require panel data across years and are left for future work.
+
+\section{Conclusion}
+Built entirely from public disclosures, this map shows how Thai business groups extend from a few ultimate owners
+through listed firms into thousands of unlisted subsidiaries, and how banks connect to them. Because every step of the
+pipeline is scripted, the map can be rebuilt each year and extended, for example to study changes in group structure,
+related-party transactions or market concentration.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\section{Reproducing the results}
+\begin{small}
+\begin{verbatim}
+pip install -r requirements.txt
+python -m tbg init                      # create folders and blank input files
+python -m tbg collect set-universe      # or place the SET list in data/raw/universe/
+python -m tbg extract pages --kind subsidiaries
+python -m tbg extract run   --kind subsidiaries --batch
+python -m tbg extract collect-batch --kind subsidiaries
+python -m tbg collect gleif
+python -m tbg all                       # build, analyze, figures, explorer, paper
+\end{verbatim}
+\end{small}
+\end{document}

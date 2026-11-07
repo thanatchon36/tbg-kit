@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>__TITLE__</title>
+<style>
+:root{--bg:#F6F7FB;--panel:#FFFFFF;--fg:#1B2133;--muted:#5E6780;--line:#DDE2EC;--accent:#2E5BDB;--chip:#EEF1F8;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1224;--panel:#121833;--fg:#ECEFF8;--muted:#9AA3C4;--line:#262E57;--accent:#9DB0FF;--chip:#1C2346;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,"Segoe UI","Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif}
+#app{display:grid;grid-template-columns:minmax(0,1fr) 340px;height:100%}
+#stage{position:relative;overflow:hidden}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;max-width:300px;box-shadow:0 6px 20px rgba(0,0,0,.18);display:none;z-index:5}
+#tip b{display:block;font-size:13px}
+#controls{position:absolute;top:12px;left:12px;width:min(340px,calc(100% - 24px));z-index:4}
+#q{width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:inherit}
+#q:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#results{margin-top:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:none}
+#results button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--fg);padding:7px 12px;font:inherit;cursor:pointer}
+#results button:hover{background:var(--chip)}
+.row{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:8px;padding:5px 10px;font:inherit;font-size:12.5px;cursor:pointer}
+#banner{position:absolute;bottom:10px;left:12px;right:12px;font-size:12px;color:var(--muted);pointer-events:none}
+#banner.syn{color:#C2410C;font-weight:600}
+#panel{background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:20px 20px 32px}
+#panel h1{font-size:19px;line-height:1.25;margin:0 0 6px}
+#panel h2{font-size:13px;margin:22px 0 8px;color:var(--muted);font-weight:600}
+#panel p{margin:0 0 8px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:13px}
+.kv span:nth-child(odd){color:var(--muted)}
+.list button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;background:none;color:var(--fg);padding:5px 6px;border-radius:6px;font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.list button:hover{background:var(--chip)}
+.list small{color:var(--muted);white-space:nowrap}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;font-size:12.5px}
+.legend button{display:flex;align-items:center;gap:7px;border:0;background:none;color:var(--fg);padding:3px 4px;border-radius:6px;font:inherit;cursor:pointer;text-align:left}
+.legend button.off{opacity:.35}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.ring{width:11px;height:11px;border-radius:50%;flex:none;border:2px solid}
+ol.chain{font-size:13px;padding-left:20px;margin:0}
+ol.chain button{border:0;background:none;color:var(--accent);padding:0;font:inherit;cursor:pointer;text-align:left}
+@media (max-width:760px){#app{grid-template-columns:1fr;grid-template-rows:60% 40%}#panel{border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div id="app">
+ <div id="stage">
+  <canvas id="cv" role="img" aria-label="Map of business groups. Use the search box or the list on the right to explore."></canvas>
+  <div id="tip"></div>
+  <div id="controls">
+   <input id="q" type="search" placeholder="Find a company, ticker or group" autocomplete="off" aria-label="Search companies and groups">
+   <div id="results"></div>
+   <div class="row"><button class="btn" id="reset">Reset view</button><label><input type="checkbox" id="ties" checked> Links between groups</label></div>
+  </div>
+  <div id="banner"></div>
+ </div>
+ <aside id="panel" aria-live="polite"></aside>
+</div>
+<script>
+const DATA = __TBG_DATA__;
+(function () {
+  "use strict";
+  const D = DATA, N = D.nodes, G = D.groups, n = N.id.length, ng = G.label.length;
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+  const tip = document.getElementById("tip"), panel = document.getElementById("panel");
+  const q = document.getElementById("q"), results = document.getElementById("results");
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  let dark = mq.matches;
+  const idx = new Map(); N.id.forEach((id, i) => idx.set(id, i));
+  const par = N.parent.map(p => (p && idx.has(p)) ? idx.get(p) : -1);
+  const members = Array.from({length: ng}, () => []);
+  for (let i = 0; i < n; i++) members[N.g[i]].push(i);
+  const lower = N.name.map((s, i) => (s + " " + (N.ticker[i] || "")).toLowerCase());
+  const ROLE = ["Ultimate owner", "Listed company", "Holding company", "Unlisted Thai company", "Company abroad"];
+  let W = 0, H = 0, dpr = 1, k = 1, k0 = 1, ox = 0, oy = 0, raf = 0;
+  let hover = -1, selNode = -1, selGroup = -1, showTies = true;
+  const indOff = new Set();
+
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const indCol = i => D.industries[i][dark ? 2 : 3];
+  const gtCol = t => (D.gtypes[t] || D.gtypes.unknown)[dark ? 1 : 2];
+  const pct = v => (v === null || v === undefined) ? "n/a" : (v * 100).toFixed(1) + "%";
+  function rgba(hex, a) {
+    const v = parseInt(hex.slice(1), 16);
+    return "rgba(" + (v >> 16 & 255) + "," + (v >> 8 & 255) + "," + (v & 255) + "," + a + ")";
+  }
+  const sx = x => x * k + ox, sy = y => -y * k + oy;
+  const rad = i => Math.max(N.role[i] >= 3 ? 0.9 : 1.6, Math.min(18, N.rad[i] * k));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+  function fit() { k0 = k = Math.min(W, H) / (2.1 * D.meta.extent); ox = W / 2 - D.meta.cx * k; oy = H / 2 + D.meta.cy * k; }
+  function resize() {
+    const r = cv.getBoundingClientRect(), first = W === 0;
+    dpr = window.devicePixelRatio || 1; W = r.width; H = r.height;
+    cv.width = Math.max(1, Math.round(W * dpr)); cv.height = Math.max(1, Math.round(H * dpr));
+    if (first) fit();
+    draw();
+  }
+  const req = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; draw(); }); };
+  const dimmed = i => (selGroup >= 0 && N.g[i] !== selGroup) || indOff.has(N.ind[i]);
+
+  function draw() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = css("--bg"); ctx.fillRect(0, 0, W, H);
+    for (let g = 0; g < ng; g++) {
+      const x = sx(G.x[g]), y = sy(G.y[g]), r = G.r[g] * k;
+      if (x + r < 0 || x - r > W || y + r < 0 || y - r > H) continue;
+      const c = gtCol(G.gtype[g]), off = selGroup >= 0 && g !== selGroup;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832);
+      ctx.fillStyle = rgba(c, off ? 0.015 : 0.05); ctx.fill();
+      ctx.lineWidth = g === selGroup ? 2 : 1; ctx.strokeStyle = rgba(c, off ? 0.12 : 0.55); ctx.stroke();
+    }
+    if (showTies && selGroup < 0) {
+      for (const t of D.ties) {
+        const a = t[0], b = t[1];
+        ctx.strokeStyle = rgba(t[2] > 0 ? (dark ? "#FFC27A" : "#E08A1E") : (dark ? "#8EA2FF" : "#5A6FD6"), 0.1 + 0.3 * t[3]);
+        ctx.lineWidth = 0.6 + 2 * t[3];
+        ctx.beginPath(); ctx.moveTo(sx(G.x[a]), sy(G.y[a]));
+        ctx.quadraticCurveTo(sx((G.x[a] + G.x[b]) * 0.3), sy((G.y[a] + G.y[b]) * 0.3), sx(G.x[b]), sy(G.y[b]));
+        ctx.stroke();
+      }
+    }
+    // edges and nodes are batched per colour so thousands of firms stay fast
+    const edgePaths = new Map(), nodePaths = new Map();
+    const get = (m, key) => { let p = m.get(key); if (!p) { p = new Path2D(); m.set(key, p); } return p; };
+    for (let i = 0; i < n; i++) {
+      const x = sx(N.x[i]), y = sy(N.y[i]);
+      const p = par[i], dim = dimmed(i) ? 1 : 0;
+      if (p >= 0) {
+        const px = sx(N.x[p]), py = sy(N.y[p]);
+        if (!((x < 0 && px < 0) || (x > W && px > W) || (y < 0 && py < 0) || (y > H && py > H))) {
+          const e = get(edgePaths, N.ind[i] + ":" + dim);
+          e.moveTo(px, py); e.quadraticCurveTo(sx(N.cx[i]), sy(N.cy[i]), x, y);
+        }
+      }
+      if (x < -20 || x > W + 20 || y < -20 || y > H + 20 || N.role[i] <= 1) continue;
+      const r = rad(i), np = get(nodePaths, N.ind[i] + ":" + dim + ":" + (N.role[i] === 4 ? 1 : 0));
+      np.moveTo(x + r, y); np.arc(x, y, r, 0, 6.2832);
+    }
+    ctx.lineWidth = Math.max(0.4, Math.min(1.6, 0.5 * k / k0));
+    for (const [key, p] of edgePaths) { const [ind, dim] = key.split(":").map(Number); ctx.strokeStyle = rgba(indCol(ind), dim ? 0.06 : 0.4); ctx.stroke(p); }
+    for (const [key, p] of nodePaths) {
+      const [ind, dim, hollow] = key.split(":").map(Number), c = rgba(indCol(ind), dim ? 0.12 : 0.95);
+      if (hollow) { ctx.strokeStyle = c; ctx.lineWidth = 1; ctx.stroke(p); } else { ctx.fillStyle = c; ctx.fill(p); }
+    }
+    const fg = css("--fg");
+    for (let i = 0; i < n; i++) {           // listed firms and apexes drawn individually on top
+      if (N.role[i] > 1) continue;
+      const x = sx(N.x[i]), y = sy(N.y[i]); if (x < -30 || x > W + 30 || y < -30 || y > H + 30) continue;
+      const r = rad(i), dim = dimmed(i);
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832);
+      ctx.fillStyle = rgba(N.role[i] === 0 ? gtCol(G.gtype[N.g[i]]) : indCol(N.ind[i]), dim ? 0.15 : 1); ctx.fill();
+      ctx.lineWidth = 1; ctx.strokeStyle = dim ? rgba(dark ? "#ECEFF8" : "#1B2133", 0.15) : fg; ctx.stroke();
+    }
+    if (selNode >= 0) {
+      ctx.strokeStyle = css("--accent"); ctx.lineWidth = 2.5; ctx.beginPath();
+      let i = selNode; ctx.moveTo(sx(N.x[i]), sy(N.y[i]));
+      while (par[i] >= 0) { const p = par[i]; ctx.quadraticCurveTo(sx(N.cx[i]), sy(N.cy[i]), sx(N.x[p]), sy(N.y[p])); i = p; }
+      ctx.stroke();
+      ctx.beginPath(); ctx.arc(sx(N.x[selNode]), sy(N.y[selNode]), rad(selNode) + 4, 0, 6.2832); ctx.stroke();
+    }
+    ctx.textAlign = "center"; ctx.textBaseline = "top"; ctx.fillStyle = fg;
+    for (let g = 0; g < ng; g++) {
+      const r = G.r[g] * k; if (r < 55) continue;
+      const x = sx(G.x[g]), y = sy(G.y[g]) + r + 4; if (x < -100 || x > W + 100 || y < -20 || y > H + 20) continue;
+      ctx.font = "600 " + Math.min(16, 9 + r / 40) + "px system-ui, sans-serif";
+      ctx.fillText(G.rank[g] + ". " + G.label[g], x, y);
+    }
+    if (k / k0 > 6) {
+      ctx.font = "11px system-ui, sans-serif"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+      for (let i = 0; i < n; i++) {
+        if (N.role[i] > 2 && k / k0 < 25) continue;
+        const x = sx(N.x[i]), y = sy(N.y[i]); if (x < 0 || x > W || y < 0 || y > H || dimmed(i)) continue;
+        ctx.fillText(N.ticker[i] || N.name[i].slice(0, 32), x + rad(i) + 3, y);
+      }
+    }
+  }
+
+  function pick(mx, my) {
+    let best = -1, bd = 1e9;
+    for (let i = 0; i < n; i++) {
+      const dx = sx(N.x[i]) - mx, dy = sy(N.y[i]) - my, d = dx * dx + dy * dy, r = rad(i) + 4;
+      if (d < r * r && d < bd) { bd = d; best = i; }
+    }
+    return best;
+  }
+  function chain(i) { const c = [i]; while (par[i] >= 0 && c.length < 50) { i = par[i]; c.push(i); } return c; }
+
+  function nodeHTML(i) {
+    const g = N.g[i], c = chain(i);
+    let h = "<h2>Company</h2><h1>" + esc(N.name[i]) + "</h1><div class='kv'>";
+    if (N.ticker[i]) h += "<span>Ticker</span><span>" + esc(N.ticker[i]) + "</span>";
+    h += "<span>Type</span><span>" + ROLE[N.role[i]] + "</span><span>Industry</span><span>" + esc(D.industries[N.ind[i]][1]) + "</span>";
+    if (N.cr[i] !== null) h += "<span>Control by owner</span><span>" + pct(N.cr[i]) + "</span><span>Cash-flow rights</span><span>" + pct(N.cf[i]) + "</span>";
+    if (N.depth[i] !== null) h += "<span>Links to owner</span><span>" + N.depth[i] + "</span>";
+    h += "</div><h2>Chain to the ultimate owner</h2><ol class='chain'>";
+    for (const j of c) h += "<li><button data-n='" + j + "'>" + esc(N.name[j]) + "</button>" + (N.pin[j] !== null && j !== c[c.length - 1] ? " <small>(" + N.pin[j].toFixed(1) + "% held by next)</small>" : "") + "</li>";
+    return h + "</ol>" + groupHTML(g);
+  }
+  function groupHTML(g) {
+    const t = D.gtypes[G.gtype[g]] || D.gtypes.unknown;
+    let h = "<h2>Group</h2><h1>" + esc(G.rank[g] + ". " + G.label[g]) + "</h1><div class='kv'><span>Ultimate owner</span><span>" + esc(t[0]) +
+      "</span><span>Firms</span><span>" + G.n_firms[g] + "</span><span>Listed</span><span>" + G.n_listed[g] + "</span></div><h2>Listed companies</h2><div class='list'>";
+    for (const i of members[g]) if (N.role[i] === 1) h += "<button data-n='" + i + "'><span>" + esc(N.name[i]) + "</span><small>" + esc(N.ticker[i]) + "</small></button>";
+    return h + "</div><p style='margin-top:14px'><button class='btn' data-clear='1'>Back to all groups</button></p>";
+  }
+  function homeHTML() {
+    let h = "<h1>" + esc(D.meta.title) + "</h1><p>" + esc(D.meta.subtitle) + "</p><h2>Industry (click to hide)</h2><div class='legend'>";
+    D.industries.forEach((r, i) => { h += "<button data-ind='" + i + "' class='" + (indOff.has(i) ? "off" : "") + "'><span class='dot' style='background:" + r[dark ? 2 : 3] + "'></span>" + esc(r[1]) + "</button>"; });
+    h += "</div><h2>Ring colour: ultimate owner</h2><div class='legend'>";
+    for (const key of D.gtype_order) { const t = D.gtypes[key]; h += "<button tabindex='-1'><span class='ring' style='border-color:" + t[dark ? 1 : 2] + "'></span>" + esc(t[0]) + "</button>"; }
+    h += "</div><h2>Largest groups</h2><div class='list'>";
+    const order = [...Array(ng).keys()].sort((a, b) => G.rank[a] - G.rank[b]).slice(0, 60);
+    for (const g of order) h += "<button data-g='" + g + "'><span>" + G.rank[g] + ". " + esc(G.label[g]) + "</span><small>" + G.n_firms[g] + " firms</small></button>";
+    return h + "</div>";
+  }
+  function render() {
+    panel.innerHTML = selNode >= 0 ? nodeHTML(selNode) : (selGroup >= 0 ? groupHTML(selGroup) : homeHTML());
+    req();
+  }
+  function focusGroup(g) {
+    selGroup = g; const r = G.r[g];
+    k = Math.min(W, H) * 0.42 / r; ox = W / 2 - G.x[g] * k; oy = H / 2 + G.y[g] * k;
+  }
+  function selectNode(i, zoom) { selNode = i; selGroup = N.g[i]; if (zoom) focusGroup(selGroup); render(); }
+
+  panel.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.n) selectNode(+b.dataset.n, true);
+    else if (b.dataset.g) { selNode = -1; focusGroup(+b.dataset.g); render(); }
+    else if (b.dataset.ind) { const v = +b.dataset.ind; indOff.has(v) ? indOff.delete(v) : indOff.add(v); render(); }
+    else if (b.dataset.clear) { selNode = -1; selGroup = -1; fit(); render(); }
+  });
+  q.addEventListener("input", () => {
+    const s = q.value.trim().toLowerCase(); results.innerHTML = "";
+    if (s.length < 2) { results.style.display = "none"; return; }
+    let h = "", c = 0;
+    for (let g = 0; g < ng && c < 4; g++) if (G.label[g].toLowerCase().includes(s)) { h += "<button data-g='" + g + "'>Group: " + esc(G.label[g]) + "</button>"; c++; }
+    for (let i = 0; i < n && c < 10; i++) if (lower[i].includes(s)) { h += "<button data-n='" + i + "'>" + esc(N.name[i]) + (N.ticker[i] ? " (" + esc(N.ticker[i]) + ")" : "") + "</button>"; c++; }
+    results.innerHTML = h || "<button disabled>No match</button>"; results.style.display = "block";
+  });
+  results.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    results.style.display = "none";
+    if (b.dataset.n) selectNode(+b.dataset.n, true); else if (b.dataset.g) { selNode = -1; focusGroup(+b.dataset.g); render(); }
+  });
+  document.getElementById("reset").onclick = () => { selNode = -1; selGroup = -1; fit(); render(); };
+  document.getElementById("ties").onchange = e => { showTies = e.target.checked; req(); };
+
+  const pts = new Map(); let drag = null, moved = 0, pinch = 0;
+  cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.offsetX, e.offsetY]); drag = [e.offsetX, e.offsetY]; moved = 0; });
+  cv.addEventListener("pointermove", e => {
+    if (pts.has(e.pointerId)) {
+      const prev = pts.get(e.pointerId); pts.set(e.pointerId, [e.offsetX, e.offsetY]);
+      if (pts.size === 2) {
+        const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+        if (pinch) zoomAt((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, d / pinch); pinch = d; moved = 99; return;
+      }
+      ox += e.offsetX - prev[0]; oy += e.offsetY - prev[1]; moved += Math.abs(e.offsetX - prev[0]) + Math.abs(e.offsetY - prev[1]); req(); return;
+    }
+    const i = pick(e.offsetX, e.offsetY);
+    if (i !== hover) { hover = i; req(); }
+    if (i >= 0) {
+      tip.style.display = "block"; tip.style.left = Math.min(e.offsetX + 14, W - 300) + "px"; tip.style.top = (e.offsetY + 14) + "px";
+      tip.innerHTML = "<b>" + esc(N.name[i]) + "</b>" + (N.ticker[i] ? esc(N.ticker[i]) + " · " : "") + ROLE[N.role[i]] + "<br>" + esc(G.label[N.g[i]]) + (N.cr[i] !== null ? "<br>Control " + pct(N.cr[i]) + ", cash flow " + pct(N.cf[i]) : "");
+    } else tip.style.display = "none";
+  });
+  const end = e => {
+    pts.delete(e.pointerId); if (pts.size < 2) pinch = 0;
+    if (drag && moved < 5 && pts.size === 0) { const i = pick(e.offsetX, e.offsetY); if (i >= 0) selectNode(i, false); else if (selGroup >= 0) { selNode = -1; selGroup = -1; render(); } }
+    if (pts.size === 0) drag = null;
+  };
+  cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+  cv.addEventListener("pointerleave", () => { tip.style.display = "none"; });
+  function zoomAt(mx, my, f) { const nk = Math.max(k0 * 0.5, Math.min(k0 * 600, k * f)); f = nk / k; ox = mx - (mx - ox) * f; oy = my - (my - oy) * f; k = nk; req(); }
+  cv.addEventListener("wheel", e => { e.preventDefault(); zoomAt(e.offsetX, e.offsetY, Math.exp(-e.deltaY * 0.0015)); }, {passive: false});
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape") { selNode = -1; selGroup = -1; results.style.display = "none"; render(); }
+    if (e.key === "/" && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+  });
+  mq.addEventListener("change", e => { dark = e.matches; render(); });
+  window.addEventListener("resize", resize);
+  const banner = document.getElementById("banner");
+  banner.textContent = D.meta.footer; if (D.meta.synthetic) banner.classList.add("syn");
+  resize(); render();
+})();
+</script>
+</body>
+</html>
