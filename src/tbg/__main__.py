@@ -38,6 +38,7 @@ def main(argv=None) -> int:
     for name, hlp in [("build", "raw -> processed tables"), ("analyze", "ownership, groups, metrics"),
                       ("figures", "all static figures"), ("explorer", "interactive HTML network"),
                       ("paper", "LaTeX tables/macros + compile paper.pdf"), ("all", "build..paper"),
+                      ("web", "web reader of the paper -> docs/paper/ (needs pandoc; run paper first)"),
                       ("status", "coverage report and review queues"),
                       ("init", "create workspace folders and blank input files")]:
         sub.add_parser(name, help=hlp)
@@ -100,6 +101,14 @@ def run_steps(cfg, steps, synthetic=False) -> int:
         elif s == "paper":
             from .paper import build_paper
             build_paper(cfg, synthetic)
+        elif s == "web":
+            from .paper_web import build_web
+            P = cfg["_paths"]
+            pdf = P["paper"] / "paper.pdf"
+            if not pdf.exists() and synthetic:
+                pdf = P["root"] / "docs" / "paper_demo.pdf"
+            build_web(P["paper"], P["root"] / "docs" / "paper", pdf=pdf, synthetic=synthetic,
+                      template=P["paper_src"] / "reader.html")
         elif s == "init":
             from .status import init_workspace
             init_workspace(cfg)

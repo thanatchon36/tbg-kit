@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+- Web reader of the paper at <https://thanatchon36.github.io/tbg-kit/paper/>: `make web` (`tbg web`, `tbg.paper_web`) flattens the filled `paper.tex`,
+  renders it with pandoc and `paper/reader.html` (abstract, results strip from the paper's macros, contents,
+  numbered sections, lettered appendix, citations) and converts the PDF figures to PNG. `make docs` refreshes it.
+
 ## [0.1.0] - 2026-11-07
 
 ### Added

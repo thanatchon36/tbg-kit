@@ -4,6 +4,7 @@
 <a href="https://github.com/thanatchon36/tbg-kit/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/thanatchon36/tbg-kit/ci.yml?style=flat-square&label=CI&labelColor=0d1224&color=f5c26b" alt="CI"></a>
 <a href="pyproject.toml"><img src="https://img.shields.io/badge/python-3.12-f5c26b?style=flat-square&labelColor=0d1224" alt="Python 3.12"></a>
 <a href="https://thanatchon36.github.io/tbg-kit/explorer.html"><img src="https://img.shields.io/badge/explorer-open%20online-f5c26b?style=flat-square&labelColor=0d1224" alt="Explorer: open online"></a>
+<a href="https://thanatchon36.github.io/tbg-kit/paper/"><img src="https://img.shields.io/badge/paper-read%20online-f5c26b?style=flat-square&labelColor=0d1224" alt="Paper: read online"></a>
 <a href="docs/paper_demo.pdf"><img src="https://img.shields.io/badge/paper-PDF-f5c26b?style=flat-square&labelColor=0d1224" alt="Paper PDF"></a>
 <a href="docs/data_sources.md"><img src="https://img.shields.io/badge/data-synthetic-b0560f?style=flat-square&labelColor=0d1224" alt="Data: synthetic"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-ffe8a3?style=flat-square&labelColor=0d1224" alt="License MIT"></a>
@@ -12,8 +13,9 @@
 </p>
 
 <p align="center">
-🕸️ <b><a href="https://thanatchon36.github.io/tbg-kit/explorer.html">Explore the network online</a></b> ·
-📄 <b><a href="docs/paper_demo.pdf">Paper (demo PDF)</a></b> ·
+📖 <b><a href="https://thanatchon36.github.io/tbg-kit/paper/">Read the paper online</a></b> ·
+📄 <b><a href="docs/paper_demo.pdf">Download the PDF</a></b> ·
+🕸️ <b><a href="https://thanatchon36.github.io/tbg-kit/explorer.html">Explore the network</a></b> ·
 🗂️ <b><a href="docs/data_sources.md">Data sources</a></b> ·
 🤗 <b><a href="https://huggingface.co/datasets/thanatchon36/tbg-kit">Dataset</a></b> ·
 🇹🇭 <b><a href="docs/guide_th.md">คู่มือภาษาไทย</a></b> ·
@@ -62,7 +64,8 @@ figure QA), `work/review/` (queues for manual checks), `work/figures/`, `work/ex
 | `paper` | LaTeX tables and macros, compile `work/paper/paper.pdf` and the arXiv bundle |
 | `all` | `build` → `analyze` → `figures` → `explorer` → `paper` |
 | `smoke` | Synthetic `build` + `analyze` in `ci-demo/` (what CI runs) |
-| `docs` | Refresh the synthetic showcase in `docs/` from a fresh `demo` |
+| `web` | Web reader of the paper → `docs/paper/index.html` (pandoc), served at <https://thanatchon36.github.io/tbg-kit/paper/> |
+| `docs` | Refresh the synthetic showcase in `docs/` (explorer, PDF, web reader) from a fresh `demo` |
 | `hf` | Synthetic dataset for Hugging Face → `dist/hf/` |
 
 Collection and extraction take arguments, so they are run directly:
@@ -95,7 +98,8 @@ The working paper by Thanatchon Chongmankhong is in [`paper/`](paper/): the LaTe
 [`paper/paper.tex`](paper/paper.tex) and its bibliography [`paper/references.bib`](paper/references.bib). `make paper`
 fills its tables and in-text numbers (macros such as `\ShareFamilyTwenty`) from the results, compiles it with
 pdfLaTeX in arXiv preprint layout (XeLaTeX when tables contain Thai names) and packs `arxiv_submission.zip`. A build
-from synthetic data is in [`docs/paper_demo.pdf`](docs/paper_demo.pdf); `make all` on the real data replaces every
+from synthetic data is in [`docs/paper_demo.pdf`](docs/paper_demo.pdf), and `make web` renders the same text and numbers
+as a web page: **[read the paper online](https://thanatchon36.github.io/tbg-kit/paper/)**; `make all` on the real data replaces every
 number in it.
 
 - Interactive explorer (synthetic): [online](https://thanatchon36.github.io/tbg-kit/explorer.html) ·
@@ -122,11 +126,12 @@ src/tbg/
   analyze.py, status.py     metrics and review queues; init and coverage report
   viz.py, viz_galaxy.py, viz_layout.py   figures with overlap QA
   explorer.py, paper.py     HTML explorer; LaTeX macros, tables, compile, arXiv bundle
+  paper_web.py              web reader docs/paper/ (pandoc + paper/reader.html)
   synthetic.py              synthetic world for demo and CI
   __main__.py               python -m tbg {demo,synth,init,status,collect,extract,build,analyze,figures,explorer,paper,all}
 prompts/                    master research prompt and extraction prompts
 seeds/business_groups.yaml  labels for known groups (labels only; membership comes from the data)
-paper/                      paper.tex, references.bib
+paper/                      paper.tex, references.bib, reader.html (web reader template)
 templates/explorer.html     explorer template
 scripts/make_banner.py      README banner from the galaxy map
 scripts/build_hf_dataset.py Hugging Face dataset from the synthetic workspace

@@ -1,7 +1,7 @@
 PY ?= .venv/bin/python
 WS ?= work
 
-.PHONY: setup demo synth init status build analyze figures explorer paper all smoke docs hf test clean
+.PHONY: setup demo synth init status build analyze figures explorer paper web all smoke docs hf test clean
 
 setup:          ## create venv and install the package (needs uv)
 	uv venv .venv --python 3.12
@@ -34,6 +34,9 @@ explorer:       ## self-contained interactive explorer -> $(WS)/explorer/index.h
 paper:          ## LaTeX tables and macros, compile $(WS)/paper/paper.pdf + arXiv bundle
 	$(PY) -m tbg --workspace $(WS) paper
 
+web:            ## web reader of the paper -> docs/paper/ (pandoc), served at https://thanatchon36.github.io/tbg-kit/paper/
+	$(PY) -m tbg --workspace $(WS) web
+
 all: build analyze figures explorer paper
 
 smoke:          ## synthetic build + analyze in ci-demo/ (what CI runs)
@@ -41,9 +44,10 @@ smoke:          ## synthetic build + analyze in ci-demo/ (what CI runs)
 	$(PY) -m tbg --workspace ci-demo build
 	$(PY) -m tbg --workspace ci-demo analyze
 
-docs: demo      ## refresh the synthetic showcase in docs/ from demo/
+docs: demo      ## refresh the synthetic showcase in docs/ (explorer, PDF, web reader) from demo/
 	cp demo/explorer/index.html docs/explorer.html
 	cp demo/paper/paper.pdf docs/paper_demo.pdf
+	$(PY) -m tbg --workspace demo web
 
 hf:             ## synthetic dataset for Hugging Face -> dist/hf (upload: hf upload thanatchon36/tbg-kit dist/hf . --repo-type dataset)
 	$(PY) -m tbg synth

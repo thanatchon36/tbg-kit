@@ -18,9 +18,9 @@
   ],
   "related_identifiers": [
     {
-      "identifier": "https://thanatchon36.github.io/tbg-kit/",
+      "identifier": "https://thanatchon36.github.io/tbg-kit/paper/",
       "relation": "isDocumentedBy",
-      "resource_type": "other",
+      "resource_type": "publication-workingpaper",
       "scheme": "url"
     },
     {

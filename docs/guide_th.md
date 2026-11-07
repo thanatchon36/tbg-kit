@@ -94,6 +94,7 @@ python -m tbg analyze    # เจ้าของสูงสุด เครื�
 python -m tbg figures    # ภาพทั้งหมด (ราว 3 นาที)
 python -m tbg explorer   # work/explorer/index.html
 python -m tbg paper      # work/paper/paper.pdf
+python -m tbg web        # docs/paper/index.html: paper ฉบับอ่านบนเว็บ (ต้องมี pandoc, หรือ make web)
 python -m tbg all        # build → analyze → figures → explorer → paper  (หรือ make all)
 ```
 

@@ -16,7 +16,7 @@ version: 0.1.0
 date-released: 2026-11-07
 license: MIT
 repository-code: "https://github.com/thanatchon36/tbg-kit"
-url: "https://thanatchon36.github.io/tbg-kit/"
+url: "https://thanatchon36.github.io/tbg-kit/paper/"
 keywords: [business-groups, ultimate-ownership, pyramids, interlocking-directorates, financial-conglomerates, thailand]
 preferred-citation:
   type: generic
@@ -25,5 +25,5 @@ preferred-citation:
     - family-names: Chongmankhong
       given-names: Thanatchon
   year: 2026
-  url: "https://github.com/thanatchon36/tbg-kit"
+  url: "https://thanatchon36.github.io/tbg-kit/paper/"
   notes: "Working paper draft; the demonstration in docs/ is built from synthetic data."

@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Thai Business Groups · tbg-kit</title>
+<meta name="description" content="Working paper: ownership, control and the finance-business nexus of Thailand's business groups.">
+<meta name="author" content="Thanatchon Chongmankhong">
+<style>
+/* Web reader for paper/paper.tex (built by tbg.paper_web, make web): one reading column
+   (~46rem) with a results strip up top. System font stacks only: the page is a single self-contained
+   file with no third-party requests. Colour tokens on :root, redefined for dark. */
+:root {
+  --paper: #fbfbf9; --ink: #17191c; --ink-2: #4c5058; --rule: #dcdcd6;
+  --accent: #1f5fae; --accent-soft: #e6eef8;
+  --pos: #1d6b52; --pos-soft: #e3f1ea; --null: #6b6f78; --null-soft: #eeeeea;
+  --find: #8a5a12; --find-soft: #f6eedd; --plate: #ffffff; --quote: #f3f3ef;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15171a; --ink: #e8e9ec; --ink-2: #a6abb4; --rule: #30343a;
+    --accent: #7fb0ec; --accent-soft: #1b2a3d; --pos: #7dcfac; --pos-soft: #16302a;
+    --null: #a6abb4; --null-soft: #23262b; --find: #e7bd73; --find-soft: #33291a;
+    --plate: #f4f4f2; --quote: #1d2024; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #15171a; --ink: #e8e9ec; --ink-2: #a6abb4; --rule: #30343a;
+  --accent: #7fb0ec; --accent-soft: #1b2a3d; --pos: #7dcfac; --pos-soft: #16302a;
+  --null: #a6abb4; --null-soft: #23262b; --find: #e7bd73; --find-soft: #33291a;
+  --plate: #f4f4f2; --quote: #1d2024; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.62 var(--font-body); }
+.page { max-width: 46rem; margin: 0 auto; padding-inline: 16px; padding-block: 48px 72px;
+  display: flex; flex-direction: column; gap: 40px; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 650; text-wrap: balance; line-height: 1.2; }
+h1 { font-size: clamp(1.7rem, 4.2vw, 2.35rem); margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: 1.4rem; margin: 2.2em 0 0.5em; }
+h3 { font-size: 1.12rem; margin: 1.8em 0 0.4em; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+code { font: 500 0.84em var(--font-mono); overflow-wrap: anywhere; }
+pre { background: var(--quote); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px;
+  overflow-x: auto; font-size: 0.84rem; line-height: 1.5; }
+pre code { font-weight: 400; font-size: inherit; overflow-wrap: normal; }
+.masthead { display: flex; flex-direction: column; gap: 12px; border-bottom: 1px solid var(--rule); padding-bottom: 28px; }
+.kicker { margin: 0; font: 500 0.78rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.09em; color: var(--accent); }
+.subtitle { margin: 0; font-style: italic; color: var(--ink-2); font-size: 1.05rem; }
+.byline { margin: 0; color: var(--ink-2); }
+.meta { margin: 0; font: 400 0.8rem/1.6 var(--font-mono); color: var(--ink-2); }
+.meta b { font-weight: 500; color: var(--ink); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+.actions a { display: inline-block; padding: 6px 12px; border: 1px solid var(--rule); border-radius: 999px;
+  font: 500 0.78rem var(--font-mono); text-decoration: none; color: var(--ink); }
+.actions a:hover { border-color: var(--accent); color: var(--accent); }
+.abstract h2, .results h2, .toc h2, .cite h2 { margin: 0 0 10px; font-size: 0.82rem; font-family: var(--font-mono);
+  font-weight: 500; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-2); }
+.abstract-body p { margin: 0 0 0.8em; font-size: 1.04rem; }
+.abstract-body p:last-child { margin-bottom: 0; }
+.results .note { margin: 0 0 14px; color: var(--ink-2); font-size: 0.95rem; }
+.result-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 8px; }
+.r { display: grid; grid-template-columns: auto 1fr; grid-template-areas: "id tag" "text text"; gap: 2px 10px;
+  align-content: start; padding: 10px 12px; border-radius: 6px; border-left: 3px solid; font-size: 0.9rem; line-height: 1.4; }
+.r-pos { background: var(--pos-soft); border-color: var(--pos); }
+.r-ref { background: var(--find-soft); border-color: var(--find); }
+.r-null, .r-nf { background: var(--null-soft); border-color: var(--null); }
+.r-id { grid-area: id; font: 500 0.85rem var(--font-mono); }
+.r-text { grid-area: text; }
+.r-text small { display: block; color: var(--ink-2); font-size: 0.8rem; margin-top: 2px; }
+.toc ul { margin: 0; padding-left: 1.2em; columns: 2 14rem; column-gap: 32px; }
+.toc li { break-inside: avoid; }
+.toc ul ul { columns: 1; padding-left: 1em; font-size: 0.92em; color: var(--ink-2); }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.paper h1 { font-size: 1.55rem; margin: 2em 0 0.5em; padding-top: 0.6em; border-top: 1px solid var(--rule); }
+.paper p, .paper li { hyphens: auto; }
+.paper p { margin: 0 0 1em; }
+.paper math[display="block"] { overflow-x: auto; max-width: 100%; }
+/* MathML does not line-break: a long inline formula scrolls on its own instead of widening the page */
+.paper p > math { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.paper .header-section-number { color: var(--accent); margin-right: 0.5em; font-family: var(--font-mono); font-size: 0.85em; font-weight: 500; }
+.paper blockquote { margin: 1.2em 0; padding: 10px 16px; border-left: 3px solid var(--rule); background: var(--quote);
+  border-radius: 0 6px 6px 0; font-size: 0.93rem; color: var(--ink-2); }
+.paper blockquote p:last-child { margin-bottom: 0; }
+figure { margin: 1.6em 0; display: flex; flex-direction: column; gap: 10px; }
+figure img { background: var(--plate); padding: 12px; border-radius: 6px; border: 1px solid var(--rule); max-width: 100%; height: auto; }
+/* the galaxy map is dark by design: no light plate around it */
+figure img.night { background: #0d1224; padding: 0; }
+figcaption, caption, .tcap { font-size: 0.88rem; color: var(--ink-2); line-height: 1.45; text-align: left; }
+caption { caption-side: top; padding-bottom: 8px; }
+.tbl { margin: 1.6em 0; }
+.paper .tcap { margin: 0 0 8px; hyphens: auto; }
+.tscroll { overflow-x: auto; }
+/* Tables keep their natural width (scrolling sideways when wider than the column); only long text cells wrap. */
+.paper table { border-collapse: collapse; width: max-content; min-width: 100%;
+  font: 400 0.78rem/1.45 var(--font-mono); font-variant-numeric: tabular-nums; }
+.paper td { max-width: 17em; }
+/* Code in table cells must not break per letter on phones; the table scrolls sideways instead. */
+.paper table code { overflow-wrap: normal; word-break: normal; white-space: nowrap; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+th { font-weight: 500; color: var(--ink-2); border-bottom-color: var(--ink-2); }
+.paper strong { font-weight: 650; }
+.cite { min-width: 0; }
+/* BibTeX keeps its lines intact (no mid-URL breaks); the block scrolls sideways on narrow screens. */
+.cite pre { overflow-x: auto; }
+.cite pre, .cite pre code { white-space: pre; overflow-wrap: normal; word-break: normal; }
+.colophon { border-top: 1px solid var(--rule); padding-top: 20px; color: var(--ink-2); font-size: 0.85rem; }
+.colophon p { margin: 0 0 0.7em; }
+@media (max-width: 480px) { body { font-size: 16px; } .page { padding-block: 28px 48px; gap: 28px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="page">
+<header class="masthead">
+  <p class="kicker">Working paper · tbg-kit</p>
+  <h1>Mapping Thailand's Business Groups: Ownership, Control, and the Finance-Business Nexus</h1>
+  <p class="byline">Thanatchon Chongmankhong · <a href="https://github.com/thanatchon36/tbg-kit">github.com/thanatchon36/tbg-kit</a></p>
+  <p class="meta"><b>Synthetic demonstration · data as of 2026-03-31</b> · business groups, ultimate ownership, pyramids, interlocking directorates, financial conglomerates, Thailand</p>
+  <ul class="actions"><li><a href="paper.pdf">Download PDF</a></li><li><a href="https://thanatchon36.github.io/tbg-kit/explorer.html">Interactive explorer</a></li><li><a href="https://github.com/thanatchon36/tbg-kit">Code and replication</a></li><li><a href="https://huggingface.co/datasets/thanatchon36/tbg-kit">Data (Hugging Face)</a></li></ul>
+</header>
+<section class="abstract" aria-label="Abstract">
+  <h2>Abstract</h2>
+  <div class="abstract-body"><p>Thailand’s corporate sector is organised around business groups: families, the state and a few foreign parents that control many firms through chains of ownership. No open, firm-level map of these groups exists. We build one from public sources only: shareholder registers published by the Stock Exchange of Thailand, subsidiary disclosures in the Form 56-1 One Report, shareholder lists filed with the Department of Business Development, bank Pillar 3 reports and the Global LEI System. The network links 12<span>,</span>063 entities through 13<span>,</span>267 ownership ties. Tracing every chain to its end with weakest-link control rights, we identify 421 groups that control two or more firms and 199 that control ten or more. At the 20% control threshold, families are the ultimate owners of 63.4% of listed firms and the state of 4.2%; 17.5% are widely held. Among controlled listed firms, 11.0% sit inside pyramids, and control rights exceed cash-flow rights by 2.4 percentage points on average. Bank groups share directors with 26.7% of business groups that have ten or more firms. Code and data pipeline are released so the map can be rebuilt every year.</p>
+<p><em>Remark.</em> This version is a demonstration built from synthetic data: all companies, persons and figures in it are fictional.</p></div>
+</section>
+<section class="results" aria-label="Results at a glance">
+  <h2>Results at a glance</h2>
+  <p class="note">Headline numbers, taken from the same macros as the PDF. All of them come from the synthetic world and validate the pipeline, not the Thai economy. Amber: pipeline results; grey: pending.</p>
+  <ul class="result-list"><li class="r r-ref"><span class="r-id">Network</span><span class="r-text">12,063 entities linked by 13,267 ownership ties<small>421 groups control two or more firms, 199 control ten or more</small></span></li>
+<li class="r r-ref"><span class="r-id">Ultimate owners</span><span class="r-text">Families control 63.4% of listed firms at the 20% threshold<small>state 4.2%, foreign parents 3.2%, widely held 17.5%, unresolved 11.8%</small></span></li>
+<li class="r r-ref"><span class="r-id">Pyramids</span><span class="r-text">11.0% of controlled listed firms sit inside pyramids<small>chains up to 7 layers deep, 2.7 on average</small></span></li>
+<li class="r r-ref"><span class="r-id">Wedge</span><span class="r-text">Control exceeds cash-flow rights by 2.4 pp on average<small>median 0.0 pp; mean cash-flow/control ratio 0.93</small></span></li>
+<li class="r r-ref"><span class="r-id">Finance–business</span><span class="r-text">Bank groups share directors with 26.7% of groups with 10+ firms<small>5 bank groups, 766 bank–group pairs</small></span></li>
+<li class="r r-ref"><span class="r-id">Concentration</span><span class="r-text">The ten largest groups hold 38.6% of listed market value<small>largest group: Aster Group with 363 firms</small></span></li>
+<li class="r r-null"><span class="r-id">Thai data</span><span class="r-text">Real-data results pending<small>every number here comes from a synthetic world; make all on the real data replaces them</small></span></li></ul>
+</section>
+<nav class="toc" aria-label="Contents"><h2>Contents</h2>
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#sec:context" id="toc-sec:context"><span class="toc-section-number">2</span> Institutional background</a></li>
+<li><a href="#sec:data" id="toc-sec:data"><span class="toc-section-number">3</span> Data</a></li>
+<li><a href="#sec:method" id="toc-sec:method"><span class="toc-section-number">4</span> Measurement</a></li>
+<li><a href="#sec:results" id="toc-sec:results"><span class="toc-section-number">5</span> Results</a></li>
+<li><a href="#sec:discussion" id="toc-sec:discussion"><span class="toc-section-number">6</span> Discussion and limitations</a></li>
+<li><a href="#conclusion" id="toc-conclusion"><span class="toc-section-number">7</span> Conclusion</a></li>
+<li><a href="#reproducing-the-results" id="toc-reproducing-the-results"><span class="toc-section-number">A</span> Reproducing the results</a></li>
+</ul>
+</nav>
+<article class="paper">
+<h1 data-number="1" id="introduction"><span class="header-section-number">1</span> Introduction</h1>
+<p>Business groups dominate private economic activity in many emerging economies <span class="citation" data-cites="khanna2007 morck2005">(<a href="#ref-khanna2007" role="doc-biblioref">Khanna and Yafeh 2007</a>; <a href="#ref-morck2005" role="doc-biblioref">Morck et al. 2005</a>)</span>. In Thailand, a small number of family conglomerates, state enterprises and bank-centred groups have shaped capital accumulation since the mid-twentieth century <span class="citation" data-cites="suehiro1989">(<a href="#ref-suehiro1989" role="doc-biblioref">Suehiro 1989</a>)</span>, and the 1997 crisis restructured rather than dissolved them <span class="citation" data-cites="polsiri2006 pasuk2008">(<a href="#ref-polsiri2006" role="doc-biblioref">Polsiri and Wiwattanakantang 2006</a>; <a href="#ref-pasuk2008" role="doc-biblioref">Phongpaichit and Baker 2008</a>)</span>. Who owns whom therefore matters for questions as different as competition in retail and telecommunications, the protection of minority shareholders, and the exposure of banks to a handful of borrowers.</p>
+<p>Measuring groups is hard because a group is not a legal entity. It is defined by control relationships that run through listed and unlisted companies, Thai and foreign registries, and nominee or depositary accounts. Existing evidence for Thailand relies on samples of listed firms and their largest shareholders <span class="citation" data-cites="claessens2000 wiwattanakantang2001">(<a href="#ref-claessens2000" role="doc-biblioref">Claessens et al. 2000</a>; <a href="#ref-wiwattanakantang2001" role="doc-biblioref">Wiwattanakantang 2001</a>)</span>. The unlisted layer, where most subsidiaries and the holding companies at the top of each group sit, remains largely unmapped.</p>
+<p>This paper builds an open and reproducible map of that layer and uses it to answer three questions. <strong>RQ1:</strong> Who ultimately controls Thai listed firms and the subsidiaries beneath them, and how many groups are there? <strong>RQ2:</strong> How far do control rights diverge from cash-flow rights, and how deep are the pyramids? <strong>RQ3:</strong> How are financial institutions connected to business groups through ownership, shared directors and fund holdings?</p>
+<p>We make three contributions. First, coverage: the network includes every subsidiary, associate and joint venture that listed firms are required to disclose, plus the private holding companies above them. Second, measurement: a two-stage ultimate-owner algorithm handles cross-holdings and cycles, aggregates family members, and excludes depositary, custodian and fund accounts that hold shares without controlling them. Third, a description of the finance–business nexus that combines three kinds of links. Section <a href="#sec:context" data-reference-type="ref" data-reference="sec:context">2</a> describes the disclosure regime, Section <a href="#sec:data" data-reference-type="ref" data-reference="sec:data">3</a> the data, Section <a href="#sec:method" data-reference-type="ref" data-reference="sec:method">4</a> the measures, Section <a href="#sec:results" data-reference-type="ref" data-reference="sec:results">5</a> the results and Section <a href="#sec:discussion" data-reference-type="ref" data-reference="sec:discussion">6</a> the limitations.</p>
+<h1 data-number="2" id="sec:context"><span class="header-section-number">2</span> Institutional background</h1>
+<h4 data-number="2.0.0.1" id="listed-companies."><span class="header-section-number">2.0.0.1</span> Listed companies.</h4>
+<p>Since fiscal year 2021, listed companies file an annual registration statement and annual report combined as the Form 56-1 One Report. It contains a chart and a list of the group’s shareholding structure, and the notes to the financial statements report investments in subsidiaries, associates and joint ventures with direct and effective ownership percentages. The Stock Exchange of Thailand (SET) publishes the ten largest shareholders of each company at the latest book-closing date, and holders must report to the Securities and Exchange Commission (SEC) whenever their stake crosses a multiple of 5% (Form 246-2).</p>
+<h4 data-number="2.0.0.2" id="depositary-receipts-and-nominees."><span class="header-section-number">2.0.0.2</span> Depositary receipts and nominees.</h4>
+<p>Thai NVDR Co., Ltd., a subsidiary of the SET, issues non-voting depositary receipts and therefore appears among the largest shareholders of many companies without exercising control. Foreign custodians and nominee accounts also appear under their own names. Treating either as an owner would overstate dispersed and foreign ownership, so we exclude both from the set of possible controllers.</p>
+<h4 data-number="2.0.0.3" id="private-companies."><span class="header-section-number">2.0.0.3</span> Private companies.</h4>
+<p>Private limited companies file a shareholder list (form BOJ.5) and audited financial statements with the Department of Business Development (DBD) every year. Each company has a 13-digit registration number that also serves as its tax identification number, which we use to link records across sources.</p>
+<h4 data-number="2.0.0.4" id="financial-groups."><span class="header-section-number">2.0.0.4</span> Financial groups.</h4>
+<p>The Bank of Thailand supervises banks on a consolidated basis as financial business groups, and banks typically disclose the composition of their group in Pillar 3 reports. Several groups now operate through a holding company above the bank (for example SCB X since 2022), so the bank is not always the apex.</p>
+<h4 data-number="2.0.0.5" id="foreign-ownership."><span class="header-section-number">2.0.0.5</span> Foreign ownership.</h4>
+<p>Under the Foreign Business Act B.E. 2542 (1999), a company in which foreigners hold half or more of the shares is treated as foreign for restricted businesses. Some firms therefore combine a Thai majority of shares with voting arrangements or preference shares that give control elsewhere. Share percentages are thus a lower bound on the complexity of control, a point we return to in Section <a href="#sec:discussion" data-reference-type="ref" data-reference="sec:discussion">6</a>.</p>
+<h1 data-number="3" id="sec:data"><span class="header-section-number">3</span> Data</h1>
+<p>Table <a href="#tab:sources" data-reference-type="ref" data-reference="tab:sources">1</a> lists the sources and Table <a href="#tab:coverage" data-reference-type="ref" data-reference="tab:coverage">2</a> reports coverage. Shareholdings are as of 2026-03-31 and subsidiary lists come from fiscal year 2025 reports. Subsidiary tables were extracted from the One Report PDFs with a large language model instructed to copy, not infer, every row; low-confidence rows and a random share of documents were checked by hand. Names were normalised (legal forms, titles, Thai PDF glyph artefacts) and matched with exact keys, registration numbers and a conservative fuzzy rule whose borderline cases were reviewed manually. When two sources report the same link we keep, in order, DBD shareholder lists, SET registers and direct holdings in the One Report; effective holdings are used only when no direct figure is available.</p>
+<div id="tab:sources">
+<div class="tbl"><p class="tcap"><b>Table 1.</b> Public data sources</p><div class="tscroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Content used</th>
+<th style="text-align: left;">Layer of the network</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">SET company pages</td>
+<td style="text-align: left;">Top-10 shareholders at the latest book-closing date; sector; market value</td>
+<td style="text-align: left;">Owners of listed firms</td>
+</tr>
+<tr>
+<td style="text-align: left;">Form 56-1 One Report</td>
+<td style="text-align: left;">Shareholding-structure section; notes on investments in subsidiaries, associates and joint ventures</td>
+<td style="text-align: left;">Subsidiaries of listed firms</td>
+</tr>
+<tr>
+<td style="text-align: left;">SEC Form 246-2</td>
+<td style="text-align: left;">Acquisitions and disposals crossing each 5% threshold</td>
+<td style="text-align: left;">Changes in large stakes</td>
+</tr>
+<tr>
+<td style="text-align: left;">DBD (BOJ.5 and statements)</td>
+<td style="text-align: left;">Shareholder lists and investment notes of private companies</td>
+<td style="text-align: left;">Private holding companies</td>
+</tr>
+<tr>
+<td style="text-align: left;">Bank Pillar 3 reports</td>
+<td style="text-align: left;">Composition of the financial business group</td>
+<td style="text-align: left;">Bank groups</td>
+</tr>
+<tr>
+<td style="text-align: left;">GLEIF Level 2</td>
+<td style="text-align: left;">Direct and ultimate accounting parents of LEI holders</td>
+<td style="text-align: left;">Cross-check</td>
+</tr>
+<tr>
+<td style="text-align: left;">Licence registers</td>
+<td style="text-align: left;">Banks, securities, asset-management and insurance licences</td>
+<td style="text-align: left;">Financial-institution flags</td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+<div id="tab:coverage">
+<div class="tbl"><p class="tcap"><b>Table 2.</b> Coverage of the network</p><div class="tscroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Listed companies in the universe</td>
+<td style="text-align: right;">527</td>
+</tr>
+<tr>
+<td style="text-align: left;">with top-10 shareholder data</td>
+<td style="text-align: right;">527</td>
+</tr>
+<tr>
+<td style="text-align: left;">with extracted subsidiary disclosures</td>
+<td style="text-align: right;">493</td>
+</tr>
+<tr>
+<td style="text-align: left;">Entities in the network</td>
+<td style="text-align: right;">12<span>,</span>063</td>
+</tr>
+<tr>
+<td style="text-align: left;">companies registered in Thailand</td>
+<td style="text-align: right;">7<span>,</span>244</td>
+</tr>
+<tr>
+<td style="text-align: left;">companies registered abroad</td>
+<td style="text-align: right;">782</td>
+</tr>
+<tr>
+<td style="text-align: left;">persons (before family aggregation)</td>
+<td style="text-align: right;">3<span>,</span>485</td>
+</tr>
+<tr>
+<td style="text-align: left;">Families after aggregation</td>
+<td style="text-align: right;">2<span>,</span>783</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ownership links</td>
+<td style="text-align: right;">13<span>,</span>267</td>
+</tr>
+<tr>
+<td style="text-align: left;">Board seats / distinct directors</td>
+<td style="text-align: right;">3<span>,</span>019 / 943</td>
+</tr>
+<tr>
+<td style="text-align: left;">GLEIF parent relationships</td>
+<td style="text-align: right;">42</td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+<h1 data-number="4" id="sec:method"><span class="header-section-number">4</span> Measurement</h1>
+<h4 data-number="4.0.0.1" id="network."><span class="header-section-number">4.0.0.1</span> Network.</h4>
+<p>Let <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>∈</mo><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">w_{ij}\in(0,1]</annotation></semantics></math> be the fraction of entity <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>’s shares held directly by entity <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> the matrix of these weights. Persons sharing a surname are aggregated into a family node, a reasonable default in Thailand where surnames are registered and rarely shared by unrelated families; a manual mapping overrides it.</p>
+<h4 data-number="4.0.0.2" id="cash-flow-rights."><span class="header-section-number">4.0.0.2</span> Cash-flow rights.</h4>
+<p>The share of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>’s profits accruing to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> through all chains is the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a,c)</annotation></semantics></math> element of <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">F</mi></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><munder><mo>∑</mo><mrow><mi>k</mi><mo>≥</mo><mn>1</mn></mrow></munder><msup><mi>M</mi><mi>k</mi></msup><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mi>M</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>I</mi><mo>−</mo><mi>M</mi><msup><mo stretchy="false" form="postfix">)</mo><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>,</mo></mrow><annotation encoding="application/x-tex">\begin{equation}
+\mathrm{CF} \;=\; \sum_{k\ge 1} M^{k} \;=\; M\,(I-M)^{-1},
+\end{equation}</annotation></semantics></math> which remains well defined with cross-holdings <span class="citation" data-cites="brioschi1989">(<a href="#ref-brioschi1989" role="doc-biblioref">Brioschi et al. 1989</a>)</span>.</p>
+<h4 data-number="4.0.0.3" id="control-rights."><span class="header-section-number">4.0.0.3</span> Control rights.</h4>
+<p>Following <span class="citation" data-cites="laporta1999">La Porta et al. (<a href="#ref-laporta1999" role="doc-biblioref">1999</a>)</span> and <span class="citation" data-cites="claessens2000">Claessens et al. (<a href="#ref-claessens2000" role="doc-biblioref">2000</a>)</span>, control along a chain is set by its weakest link. We apply the rule block by block, so that one block of votes is never counted twice: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">R</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo minsize="180%" maxsize="180%" stretchy="true" form="prefix">{</mo><mn>1</mn><mo>,</mo><mspace width="0.278em"></mspace><munder><mo>∑</mo><mrow><mi>s</mi><mspace width="0.167em"></mspace><mo>∈</mo><mspace width="0.167em"></mspace><mi>𝒫</mi><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow></munder><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">{</mo><msub><mi>w</mi><mrow><mi>s</mi><mi>c</mi></mrow></msub><mo>,</mo><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">R</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">}</mo><mo minsize="180%" maxsize="180%" stretchy="true" form="postfix">}</mo><mo>,</mo><mspace width="2.0em"></mspace><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">R</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">\begin{equation}
+\mathrm{CR}(a,c)=\min\Big\{1,\;\sum_{s\,\in\,\mathcal{P}(c)} \min\big\{w_{sc},\,\mathrm{CR}(a,s)\big\}\Big\},\qquad \mathrm{CR}(a,a)=1,
+\end{equation}</annotation></semantics></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒫</mi><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{P}(c)</annotation></semantics></math> is the set of direct shareholders of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>. Nodes on ownership cycles (3 cycles in the data) are solved by fixed-point iteration.</p>
+<h4 data-number="4.0.0.4" id="ultimate-owners-and-groups."><span class="header-section-number">4.0.0.4</span> Ultimate owners and groups.</h4>
+<p>In a first stage, the candidate owners are terminal nodes: families, persons, state bodies, the Crown Property Bureau, foreign parents and private companies whose own shareholders are unknown. Thai NVDR, custodians, funds and state investment funds (such as the Social Security Office) are excluded. A firm’s ultimate owner is the candidate with the largest control right at or above the threshold <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> (20% in the main specification; 10% and 50% as robustness). Firms without one are widely held; in a second stage, firms they control are assigned to them, which separates “widely held corporation” and “widely held financial” apexes as in <span class="citation" data-cites="laporta1999">La Porta et al. (<a href="#ref-laporta1999" role="doc-biblioref">1999</a>)</span>. A group is the set of firms sharing an ultimate owner. For firms controlled by the state or the Crown Property Bureau, groups are defined one level down, at the top firm (for example an energy or airport holding), because merging all state enterprises into one group would hide their separate structures; ultimate-owner shares are unaffected by this choice.</p>
+<h4 data-number="4.0.0.5" id="pyramids-and-the-wedge."><span class="header-section-number">4.0.0.5</span> Pyramids and the wedge.</h4>
+<p>The depth of a firm is the length of the shortest control chain from its ultimate owner along links controlled at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> or more. A firm sits in a pyramid when its depth is two or more. The wedge is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">R</mi></mrow><mo>−</mo><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">F</mi></mrow></mrow><annotation encoding="application/x-tex">\mathrm{CR}-\mathrm{CF}</annotation></semantics></math> <span class="citation" data-cites="claessens2000 almeida2006">(<a href="#ref-claessens2000" role="doc-biblioref">Claessens et al. 2000</a>; <a href="#ref-almeida2006" role="doc-biblioref">Almeida and Wolfenzon 2006</a>)</span>.</p>
+<h4 data-number="4.0.0.6" id="financebusiness-nexus."><span class="header-section-number">4.0.0.6</span> Finance–business nexus.</h4>
+<p>A bank group is linked to a business group through (i) ownership of at least 1% in either direction, (ii) a person on the board of a financial institution in the bank group and on a board in the business group <span class="citation" data-cites="mizruchi1996">(<a href="#ref-mizruchi1996" role="doc-biblioref">Mizruchi 1996</a>)</span>, or (iii) funds managed by the bank group’s asset-management company holding shares in the business group’s listed firms.</p>
+<h1 data-number="5" id="sec:results"><span class="header-section-number">5</span> Results</h1>
+<h2 data-number="5.1" id="the-map"><span class="header-section-number">5.1</span> The map</h2>
+<p>Figure <a href="#fig:galaxy" data-reference-type="ref" data-reference="fig:galaxy">1</a> draws every group with at least three firms. The largest, Aster Group, controls 363 firms in 2 SET industries, and the most diversified group spans 6 industries. 46 groups control two or more listed firms; together they account for 23.5% of listed firms. The network is highly connected: the largest weakly connected component contains 99.9% of all entities. Figure <a href="#fig:tree" data-reference-type="ref" data-reference="fig:tree">6</a> shows the full control tree of the largest group.</p>
+<figure id="fig:galaxy" data-latex-placement="p">
+<img loading="lazy" class="night" src="figures/galaxy_paper.png" />
+<figcaption><b>Figure 1.</b> Thai business groups. Each circle is a group with at least three firms (area proportional to the number of firms); the ultimate owner sits at the centre and controlled firms lie on rings by ownership distance. Ring colour gives the type of ultimate owner, node colour the industry, and arcs the strongest links between groups (blue: shared directors; orange: cross-ownership). Numbers match the ranks in Table <a href="#tab:groups" data-reference-type="ref" data-reference="tab:groups">4</a>.</figcaption>
+</figure>
+<h2 data-number="5.2" id="who-controls-listed-firms"><span class="header-section-number">5.2</span> Who controls listed firms</h2>
+<p>Table <a href="#tab:uo" data-reference-type="ref" data-reference="tab:uo">3</a> and Figure <a href="#fig:uo" data-reference-type="ref" data-reference="fig:uo">2</a> report ultimate owners. At the 20% threshold, the most common ultimate owner is the family category; families control 63.4%, the state 4.2%, foreign parents 3.2% and the Crown Property Bureau 0.0% of listed firms, while 17.5% are widely held. A residual 11.8% ends at private holding companies whose shareholders are not yet in the data; they are the priority for further DBD requests. At the 10% threshold, the family share is 63.6%.</p>
+<div id="tab:uo">
+<div class="tbl"><p class="tcap"><b>Table 3.</b> Ultimate owners of listed firms (% of firms; last column weighted by market value)</p><div class="tscroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Ultimate owner</th>
+<th style="text-align: right;">10%</th>
+<th style="text-align: right;">20%</th>
+<th style="text-align: right;">50%</th>
+<th style="text-align: right;">By value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">63.6%</td>
+<td style="text-align: right;">63.4%</td>
+<td style="text-align: right;">14.0%</td>
+<td style="text-align: right;">73.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">State</td>
+<td style="text-align: right;">4.2%</td>
+<td style="text-align: right;">4.2%</td>
+<td style="text-align: right;">0.6%</td>
+<td style="text-align: right;">2.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Foreign parent</td>
+<td style="text-align: right;">3.2%</td>
+<td style="text-align: right;">3.2%</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: right;">2.9%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Widely held (corporate)</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">1.3%</td>
+<td style="text-align: right;">0.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Widely held (financial)</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.2%</td>
+<td style="text-align: right;">0.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: right;">10.6%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Widely held</td>
+<td style="text-align: right;">17.3%</td>
+<td style="text-align: right;">17.5%</td>
+<td style="text-align: right;">83.1%</td>
+<td style="text-align: right;">11.4%</td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+<figure id="fig:uo" data-latex-placement="t">
+<embed src="figures/fig_uo.png" />
+<figcaption><b>Figure 2.</b> Ultimate owners of listed firms by control threshold.</figcaption>
+</figure>
+<h2 data-number="5.3" id="size-and-concentration-of-groups"><span class="header-section-number">5.3</span> Size and concentration of groups</h2>
+<p>Table <a href="#tab:groups" data-reference-type="ref" data-reference="tab:groups">4</a> lists the largest groups. Group size is highly skewed (Figure <a href="#fig:groups" data-reference-type="ref" data-reference="fig:groups">3</a>): the ten largest groups by market value hold 38.6% of the market value of listed firms, and the Herfindahl–Hirschman index across groups is 450.</p>
+<div id="tab:groups">
+<div class="tbl"><p class="tcap"><b>Table 4.</b> The fifteen largest groups by number of firms</p><div class="tscroll"><table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th style="text-align: left;">Group</th>
+<th style="text-align: left;">Ultimate owner</th>
+<th style="text-align: right;">Firms</th>
+<th style="text-align: right;">Listed</th>
+<th style="text-align: right;">Abroad</th>
+<th style="text-align: right;">Ind.</th>
+<th style="text-align: right;">Depth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Aster Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">363</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Ember Group</td>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">290</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Garnet Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">258</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Yarrow Group</td>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">183</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Dahlia Group</td>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">176</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Willow Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">161</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Cobalt Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Sable Group</td>
+<td style="text-align: left;">Foreign parent</td>
+<td style="text-align: right;">142</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Cedar Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">141</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Banyan Group</td>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">134</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">Fjord Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">131</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">Family Harborkul</td>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">119</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">Falcon Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">118</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">Xanthe Group</td>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">111</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">Acacia Group</td>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">106</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+<figure id="fig:groups" data-latex-placement="t">
+<embed src="figures/fig_groups.png" />
+<figcaption><b>Figure 3.</b> Distribution of group size and depth.</figcaption>
+</figure>
+<h2 data-number="5.4" id="pyramids-and-the-separation-of-ownership-and-control"><span class="header-section-number">5.4</span> Pyramids and the separation of ownership and control</h2>
+<p>Among listed firms with an ultimate owner, 11.0% are held through pyramids. The mean wedge between control and cash-flow rights is 2.4 percentage points (median 0.0), and the mean ratio of cash-flow to control rights is 0.93. Control chains reach 7 links; the average firm in the network sits 2.7 links below its ultimate owner (Figure <a href="#fig:wedge" data-reference-type="ref" data-reference="fig:wedge">4</a>). 6 firms belong to 3 ownership cycles.</p>
+<figure id="fig:wedge" data-latex-placement="t">
+<embed src="figures/fig_wedge.png" />
+<figcaption><b>Figure 4.</b> Control versus cash-flow rights of listed firms, and the length of control chains.</figcaption>
+</figure>
+<h2 data-number="5.5" id="the-financebusiness-nexus"><span class="header-section-number">5.5</span> The finance–business nexus</h2>
+<p>The data contain 58 financial institutions, including 6 banks, organised in 5 bank groups. We find 766 linked pairs of bank groups and business groups: 114 director links, 1 ownership links and 816 fund links. Bank groups share at least one director with 26.7% of business groups that have ten or more firms (Figure <a href="#fig:nexus" data-reference-type="ref" data-reference="fig:nexus">5</a>, Table <a href="#tab:nexus" data-reference-type="ref" data-reference="tab:nexus">5</a>). Fund links reflect portfolio investment by asset-management arms on behalf of unit holders, not control by the bank.</p>
+<figure id="fig:nexus" data-latex-placement="t">
+<embed src="figures/fig_nexus.png" />
+<figcaption><b>Figure 5.</b> Links between bank groups and the most connected business groups.</figcaption>
+</figure>
+<div id="tab:nexus">
+<div class="tbl"><p class="tcap"><b>Table 5.</b> Strongest bank–business group links</p><div class="tscroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Bank group</th>
+<th style="text-align: left;">Business group</th>
+<th style="text-align: right;">Own.</th>
+<th style="text-align: right;">Dir.</th>
+<th style="text-align: right;">Funds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Family Alphawong</td>
+<td style="text-align: left;">Dahlia Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gamma Financial Group Inc. (J…</td>
+<td style="text-align: left;">Aster Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">BET1 (Beta Bank)</td>
+<td style="text-align: left;">Garnet Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Family Alphawong</td>
+<td style="text-align: left;">Harbor Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">KAP1 (Kappa Bank)</td>
+<td style="text-align: left;">Lumen Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Saffron Group</td>
+<td style="text-align: left;">Dahlia Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">KAP1 (Kappa Bank)</td>
+<td style="text-align: left;">Banyan Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">Family Alphawong</td>
+<td style="text-align: left;">Rowan Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">KAP1 (Kappa Bank)</td>
+<td style="text-align: left;">Raven Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gamma Financial Group Inc. (J…</td>
+<td style="text-align: left;">Yarrow Group</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+<h2 data-number="5.6" id="robustness-and-validation"><span class="header-section-number">5.6</span> Robustness and validation</h2>
+<p>Table <a href="#tab:robust" data-reference-type="ref" data-reference="tab:robust">6</a> recomputes ultimate owners at alternative thresholds, without family aggregation, and treating state investment funds as owners. GLEIF reports 42 parent relationships for Thai entities in our data; the network agrees with 100.0% of them (same group or an ownership path from parent to child). A random sample of listed firms (<code>review/validation_sample.csv</code>) awaits manual checking; its accuracy will be reported here.</p>
+<div id="tab:robust">
+<div class="tbl"><p class="tcap"><b>Table 6.</b> Robustness: ultimate owners of listed firms under alternative specifications (% of firms)</p><div class="tscroll"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Ultimate owner</th>
+<th style="text-align: right;">10%</th>
+<th style="text-align: right;">20%</th>
+<th style="text-align: right;">50%</th>
+<th style="text-align: right;">No family agg.</th>
+<th style="text-align: right;">State funds as owners</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Family</td>
+<td style="text-align: right;">63.6%</td>
+<td style="text-align: right;">63.4%</td>
+<td style="text-align: right;">14.0%</td>
+<td style="text-align: right;">53.5%</td>
+<td style="text-align: right;">63.4%</td>
+</tr>
+<tr>
+<td style="text-align: left;">State</td>
+<td style="text-align: right;">4.2%</td>
+<td style="text-align: right;">4.2%</td>
+<td style="text-align: right;">0.6%</td>
+<td style="text-align: right;">4.2%</td>
+<td style="text-align: right;">4.2%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Foreign parent</td>
+<td style="text-align: right;">3.2%</td>
+<td style="text-align: right;">3.2%</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: right;">3.2%</td>
+<td style="text-align: right;">3.2%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Widely held (corporate)</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">1.3%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Widely held (financial)</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.2%</td>
+<td style="text-align: right;">0.0%</td>
+<td style="text-align: right;">0.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Unresolved private holding</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">11.8%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Widely held</td>
+<td style="text-align: right;">17.3%</td>
+<td style="text-align: right;">17.5%</td>
+<td style="text-align: right;">83.1%</td>
+<td style="text-align: right;">27.3%</td>
+<td style="text-align: right;">17.5%</td>
+</tr>
+</tbody>
+</table></div></div>
+</div>
+<figure id="fig:tree" data-latex-placement="p">
+<embed src="figures/tree_top.png" />
+<figcaption><b>Figure 6.</b> Control tree of the largest group. The ultimate owner is at the centre; each ring is one more ownership link. Listed companies are labelled with ticker and name; squares mark holding companies.</figcaption>
+</figure>
+<h1 data-number="6" id="sec:discussion"><span class="header-section-number">6</span> Discussion and limitations</h1>
+<p>Four limitations bound the interpretation. First, chains that leave Thailand through holding companies registered abroad stop at the border unless the foreign parent is itself disclosed, so foreign ultimate owners may be intermediate vehicles. Second, nominee shareholders and voting agreements are invisible in share registers; control can be stronger, or held by different people, than the percentages suggest. Third, surname-based family aggregation can merge unrelated people who share a surname or split families whose members use different surnames; the manual mapping and the robustness table address this only in part. Fourth, sources differ in their reference dates (book closing, fiscal year end, annual general meeting), so the network is a snapshot assembled from several dates within one year. Accounting control under TFRS 10 can also differ from the share-based definition used here.</p>
+<p>Within these limits, the map supports descriptive conclusions about the reach of groups, the use of pyramids and the ties between banks and business groups. Causal questions, such as whether pyramids are associated with lower minority shareholder value <span class="citation" data-cites="bertrand2002 masulis2011">(<a href="#ref-bertrand2002" role="doc-biblioref">Bertrand et al. 2002</a>; <a href="#ref-masulis2011" role="doc-biblioref">Masulis et al. 2011</a>)</span>, require panel data across years and are left for future work.</p>
+<h1 data-number="7" id="conclusion"><span class="header-section-number">7</span> Conclusion</h1>
+<p>Built entirely from public disclosures, this map shows how Thai business groups extend from a few ultimate owners through listed firms into thousands of unlisted subsidiaries, and how banks connect to them. Because every step of the pipeline is scripted, the map can be rebuilt each year and extended, for example to study changes in group structure, related-party transactions or market concentration.</p>
+<h1 data-number="8" id="reproducing-the-results"><span class="header-section-number">A</span> Reproducing the results</h1>
+<pre><code>pip install -e .                        # or: make setup
+python -m tbg init                      # create folders and blank input files
+python -m tbg collect set-universe      # or place the SET list in data/raw/universe/
+python -m tbg extract pages --kind subsidiaries
+python -m tbg extract run   --kind subsidiaries --batch
+python -m tbg extract collect-batch --kind subsidiaries
+python -m tbg collect gleif
+python -m tbg all                       # build, analyze, figures, explorer, paper</code></pre>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-almeida2006" class="csl-entry" role="listitem">
+Almeida, Heitor V., and Daniel Wolfenzon. 2006. <span>“A Theory of Pyramidal Ownership and Family Business Groups.”</span> <em>Journal of Finance</em> 61 (6): 2637–80.
+</div>
+<div id="ref-bertrand2002" class="csl-entry" role="listitem">
+Bertrand, Marianne, Paras Mehta, and Sendhil Mullainathan. 2002. <span>“Ferreting Out Tunneling: An Application to <span>Indian</span> Business Groups.”</span> <em>Quarterly Journal of Economics</em> 117 (1): 121–48.
+</div>
+<div id="ref-brioschi1989" class="csl-entry" role="listitem">
+Brioschi, Francesco, Luigi Buzzacchi, and Massimo G. Colombo. 1989. <span>“Risk Capital Financing and the Separation of Ownership and Control in Business Groups.”</span> <em>Journal of Banking &amp; Finance</em> 13 (4–5): 747–72.
+</div>
+<div id="ref-claessens2000" class="csl-entry" role="listitem">
+Claessens, Stijn, Simeon Djankov, and Larry H. P. Lang. 2000. <span>“The Separation of Ownership and Control in <span>East Asian</span> Corporations.”</span> <em>Journal of Financial Economics</em> 58 (1–2): 81–112.
+</div>
+<div id="ref-khanna2007" class="csl-entry" role="listitem">
+Khanna, Tarun, and Yishay Yafeh. 2007. <span>“Business Groups in Emerging Markets: Paragons or Parasites?”</span> <em>Journal of Economic Literature</em> 45 (2): 331–72.
+</div>
+<div id="ref-laporta1999" class="csl-entry" role="listitem">
+La Porta, Rafael, Florencio Lopez-de-Silanes, and Andrei Shleifer. 1999. <span>“Corporate Ownership Around the World.”</span> <em>Journal of Finance</em> 54 (2): 471–517.
+</div>
+<div id="ref-masulis2011" class="csl-entry" role="listitem">
+Masulis, Ronald W., Peter Kien Pham, and Jason Zein. 2011. <span>“Family Business Groups Around the World: Financing Advantages, Control Motivations, and Organizational Choices.”</span> <em>Review of Financial Studies</em> 24 (11): 3556–600.
+</div>
+<div id="ref-mizruchi1996" class="csl-entry" role="listitem">
+Mizruchi, Mark S. 1996. <span>“What Do Interlocks Do? An Analysis, Critique, and Assessment of Research on Interlocking Directorates.”</span> <em>Annual Review of Sociology</em> 22: 271–98.
+</div>
+<div id="ref-morck2005" class="csl-entry" role="listitem">
+Morck, Randall, Daniel Wolfenzon, and Bernard Yeung. 2005. <span>“Corporate Governance, Economic Entrenchment, and Growth.”</span> <em>Journal of Economic Literature</em> 43 (3): 655–720.
+</div>
+<div id="ref-pasuk2008" class="csl-entry" role="listitem">
+Phongpaichit, Pasuk, and Chris Baker, eds. 2008. <em>Thai Capital After the 1997 Crisis</em>. Silkworm Books.
+</div>
+<div id="ref-polsiri2006" class="csl-entry" role="listitem">
+Polsiri, Piruna, and Yupana Wiwattanakantang. 2006. <span>“Thai Business Groups: Crisis and Restructuring.”</span> In <em>Business Groups in East Asia: Financial Crisis, Restructuring, and New Growth</em>, edited by Sea-Jin Chang. Oxford University Press.
+</div>
+<div id="ref-suehiro1989" class="csl-entry" role="listitem">
+Suehiro, Akira. 1989. <em>Capital Accumulation in <span>Thailand</span> 1855–1985</em>. Centre for East Asian Cultural Studies.
+</div>
+<div id="ref-wiwattanakantang2001" class="csl-entry" role="listitem">
+Wiwattanakantang, Yupana. 2001. <span>“Controlling Shareholders and Corporate Value: Evidence from <span>Thailand</span>.”</span> <em>Pacific-Basin Finance Journal</em> 9 (4): 323–62.
+</div>
+</div>
+</article>
+<section class="cite" aria-label="How to cite"><h2>How to cite</h2><pre><code>@techreport{chongmankhong2026tbg,
+  author      = {Chongmankhong, Thanatchon},
+  title       = {Mapping Thailand&#x27;s Business Groups: Ownership, Control, and the Finance-Business Nexus},
+  year        = {2026},
+  type        = {Working paper},
+  url         = {https://thanatchon36.github.io/tbg-kit/paper/}
+}</code></pre></section>
+<footer class="colophon">
+<p>Rendered from <code>paper/paper.tex</code> by <code>tbg.paper_web</code> (<code>make web</code>). Every number is a macro filled from the results, exactly as in the PDF, which is authoritative. This version uses synthetic data throughout: every company, person and number is fictional.</p>
+</footer>
+</div>
+</body>
+</html>
